@@ -28,29 +28,6 @@ interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-// function ColorSchemeToggle(props: IconButtonProps) {
-//   const { onClick, ...other } = props;
-//   const { mode, setMode } = useColorScheme();
-//   const [mounted, setMounted] = React.useState(false);
-
-//   React.useEffect(() => setMounted(true), []);
-
-//   return (
-//     <IconButton
-//       aria-label="toggle light/dark mode"
-//       size="sm"
-//       variant="outlined"
-//       disabled={!mounted}
-//       onClick={(event) => {
-//         setMode(mode === 'light' ? 'dark' : 'light');
-//         onClick?.(event);
-//       }}
-//       {...other}
-//     >
-//       {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-//     </IconButton>
-//   );
-// }
 import appFirebase from '../../src/credentials'
 import {signInWithEmailAndPassword, getAuth} from 'firebase/auth'
 const auth = getAuth(appFirebase)
@@ -66,14 +43,11 @@ export default function Login() {
     const email = formElements.email.value;
     const password = formElements.password.value;
 
-    try {
-      // Intentar iniciar sesión con Firebase
+    try {   
       await signInWithEmailAndPassword(auth, email, password);
-      // Si la autenticación es exitosa, redirigir al usuario a la página de inicio (Home)
       navigate('/billy/home');
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      // Manejar el error, por ejemplo, mostrar un mensaje al usuario
       alert('Error al iniciar sesión. Por favor, verifica tus credenciales e inténtalo de nuevo.');
     }
   };
@@ -196,18 +170,6 @@ export default function Login() {
                   <Input type="password" name="password" />
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
-                  {/* <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Checkbox size="sm" label="Remember me" name="persistent" />
-                    <Link level="title-sm" href="#replace-with-a-link">
-                      Forgot your password?
-                    </Link>
-                  </Box> */}
                   <Button type="submit" fullWidth>
                     Sign in
                   </Button>
