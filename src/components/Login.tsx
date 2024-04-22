@@ -4,7 +4,7 @@ import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
 import Button from '@mui/joy/Button';
-import Checkbox from '@mui/joy/Checkbox';
+// import Checkbox from '@mui/joy/Checkbox';
 import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
@@ -13,10 +13,11 @@ import Link from '@mui/joy/Link';
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
-import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+// import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+// import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
 import GoogleIcon from './GoogleIcon';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -27,31 +28,56 @@ interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-function ColorSchemeToggle(props: IconButtonProps) {
-  const { onClick, ...other } = props;
-  const { mode, setMode } = useColorScheme();
-  const [mounted, setMounted] = React.useState(false);
+// function ColorSchemeToggle(props: IconButtonProps) {
+//   const { onClick, ...other } = props;
+//   const { mode, setMode } = useColorScheme();
+//   const [mounted, setMounted] = React.useState(false);
 
-  React.useEffect(() => setMounted(true), []);
+//   React.useEffect(() => setMounted(true), []);
 
-  return (
-    <IconButton
-      aria-label="toggle light/dark mode"
-      size="sm"
-      variant="outlined"
-      disabled={!mounted}
-      onClick={(event) => {
-        setMode(mode === 'light' ? 'dark' : 'light');
-        onClick?.(event);
-      }}
-      {...other}
-    >
-      {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-    </IconButton>
-  );
-}
+//   return (
+//     <IconButton
+//       aria-label="toggle light/dark mode"
+//       size="sm"
+//       variant="outlined"
+//       disabled={!mounted}
+//       onClick={(event) => {
+//         setMode(mode === 'light' ? 'dark' : 'light');
+//         onClick?.(event);
+//       }}
+//       {...other}
+//     >
+//       {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
+//     </IconButton>
+//   );
+// }
+import appFirebase from '../../src/credentials'
+import {signInWithEmailAndPassword, getAuth} from 'firebase/auth'
+const auth = getAuth(appFirebase)
+
 
 export default function Login() {
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<SignInFormElement>) => {
+    event.preventDefault();
+    const formElements = event.currentTarget.elements;
+    const email = formElements.email.value;
+    const password = formElements.password.value;
+
+    try {
+      // Intentar iniciar sesión con Firebase
+      await signInWithEmailAndPassword(auth, email, password);
+      // Si la autenticación es exitosa, redirigir al usuario a la página de inicio (Home)
+      navigate('/billy/home');
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      // Manejar el error, por ejemplo, mostrar un mensaje al usuario
+      alert('Error al iniciar sesión. Por favor, verifica tus credenciales e inténtalo de nuevo.');
+    }
+  };
+
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
       <CssBaseline />
@@ -59,7 +85,7 @@ export default function Login() {
         styles={{
           ':root': {
             '--Form-maxWidth': '800px',
-            '--Transition-duration': '0.4s', // set to `none` to disable transition
+            '--Transition-duration': '0.4s',
           },
         }}
       />
@@ -100,9 +126,9 @@ export default function Login() {
               <IconButton variant="soft" color="primary" size="sm">
                 <BadgeRoundedIcon />
               </IconButton>
-              <Typography level="title-lg">Company logo</Typography>
+              <Typography level="title-lg">Billy</Typography>
             </Box>
-            <ColorSchemeToggle />
+            {/* <ColorSchemeToggle /> */}
           </Box>
           <Box
             component="main"
@@ -133,8 +159,8 @@ export default function Login() {
                   Sign in
                 </Typography>
                 <Typography level="body-sm">
-                  New to company?{' '}
-                  <Link href="#replace-with-a-link" level="title-sm">
+                  New in billy?{' '}
+                  <Link component={NavLink} to="/billy/signup" level="title-sm">
                     Sign up!
                   </Link>
                 </Typography>
@@ -159,16 +185,7 @@ export default function Login() {
             </Divider>
             <Stack gap={4} sx={{ mt: 2 }}>
               <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
+                onSubmit={handleSubmit}
               >
                 <FormControl required>
                   <FormLabel>Email</FormLabel>
@@ -179,7 +196,7 @@ export default function Login() {
                   <Input type="password" name="password" />
                 </FormControl>
                 <Stack gap={4} sx={{ mt: 2 }}>
-                  <Box
+                  {/* <Box
                     sx={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -190,7 +207,7 @@ export default function Login() {
                     <Link level="title-sm" href="#replace-with-a-link">
                       Forgot your password?
                     </Link>
-                  </Box>
+                  </Box> */}
                   <Button type="submit" fullWidth>
                     Sign in
                   </Button>
@@ -200,7 +217,7 @@ export default function Login() {
           </Box>
           <Box component="footer" sx={{ py: 3 }}>
             <Typography level="body-xs" textAlign="center">
-              © Your company {new Date().getFullYear()}
+              © Billy {new Date().getFullYear()}
             </Typography>
           </Box>
         </Box>
