@@ -1,12 +1,17 @@
 import React from "react";
 
-const Home = () => {
+
+
+export default function Home() {
     return (
-        <div>
-            <h2>Bienvenido logueado correctamente</h2>
-
+        <div className="home-container">
+            <div className="groups-container">
+                {/* Left side - Groups */}
+                {/* Add new group */}
+            </div>
+            <div className="group-info-container">
+                {/* Right side - Group information */}
+            </div>
         </div>
-    )
+    );
 }
-
-export default Home
