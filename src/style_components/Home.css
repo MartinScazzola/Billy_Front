@@ -1,0 +1,33 @@
+/* Home.css */
+.table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+    background-color: #252424; /* Fondo en escala de grises */
+    border-radius: 16px; /* Bordes redondeados */
+    overflow: hidden; /* Asegura que el border-radius se aplique correctamente */
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); /* Sombra suave */
+    border: 1px solid #ffffff; /* Borde tabla gris */
+  }
+  
+  .table th,
+  .table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0; /* Borde sutil entre filas */
+    text-align: center; /* Centra el contenido horizontalmente */
+    vertical-align: middle; /* Centra el contenido verticalmente */
+  }
+  
+  .table th {
+    background-color: #000000; /* Cabezera en un tono más oscuro de gris */
+  }
+  
+  .link {
+    color: #00b0ff; /* Color celeste para los enlaces */
+    text-decoration: none; /* No underline para una apariencia más limpia */
+  }
+  
+  .link:hover {
+    text-decoration: underline; /* Subrayar al hacer hover para indicar clic */
+  }
+  
