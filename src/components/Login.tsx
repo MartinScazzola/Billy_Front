@@ -76,7 +76,7 @@ export default function Login() {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'background.level1',
-            backgroundImage: 'url(/billy_logo.jpeg)',
+            backgroundImage: 'url(/billy_logo.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
