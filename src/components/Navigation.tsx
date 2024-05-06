@@ -11,9 +11,10 @@ import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentIndRoundedIcon from '@mui/icons-material/AssignmentIndRounded';
 import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
-import TodayRoundedIcon from '@mui/icons-material/TodayRounded';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function Navigation() {
+export default function Navigation({ groupMembers, handleOpenModal, handleDeleteGroupMember, errorMemberName }) {
   return (
     <List
       size="sm"
@@ -34,7 +35,7 @@ export default function Navigation() {
               <ListItemDecorator>
                 <PeopleRoundedIcon fontSize="small" />
               </ListItemDecorator>
-              <ListItemContent>Groupo</ListItemContent>
+              <ListItemContent>Grupo</ListItemContent>
             </ListItemButton>
           </ListItem>
           <ListItem>
@@ -55,6 +56,40 @@ export default function Navigation() {
           </ListItem>
         </List>
       </ListItem>
+      <List
+          size="sm"
+          sx={{ '--ListItem-radius': 'var(--joy-radius-sm)', '--List-gap': '4px' }}
+        >
+        <ListItem nested sx={{ display: 'flex'}}>
+            <ListItem >
+              <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800'}}>
+                  Miembros del grupo
+              </ListSubheader>
+              <ListItemButton onClick={handleOpenModal}>
+                <ListItemDecorator>
+                  <AddIcon/>
+                </ListItemDecorator>
+              </ListItemButton>
+            </ListItem>
+          {groupMembers.map((member, index) => (
+            <ListItem key={index}>
+              <ListItem>
+                <ListItemDecorator>
+                  <ArticleRoundedIcon fontSize="small" />
+                </ListItemDecorator>
+                <ListItemContent>{member.name}</ListItemContent>
+                <ListItemContent>Deudas: ARG: {member.debts.ARG} USD: {member.debts.ARG}</ListItemContent>
+                <ListItemButton onClick={() => handleDeleteGroupMember(member.name)}>
+                  <ListItemDecorator>
+                    <DeleteIcon/>
+                  </ListItemDecorator>
+              </ListItemButton>
+              </ListItem>
+            </ListItem>
+          ))}
+        </ListItem>
+      </List>
     </List>
   );
 }
+
