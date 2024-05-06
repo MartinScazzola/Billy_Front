@@ -19,15 +19,28 @@ import Layout from './Layout';
 import Navigation from './Navigation';
 import { set } from 'firebase/database';
 
+type Expense = {
+  name: string;
+  amount: number;
+  currency: string;
+  memberWhoPaid: string;
+};
+
+type Member = {
+  name: string;
+  debts: { [key: string]: number };
+};
+
 const GroupPage = () => {
   const { groupName } = useParams(); 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const [expenses, setExpenses] = useState([]);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseName, setExpenseName] = useState('');
   const [amount, setAmount] = useState(0);
+  const [memberWhoPaid, setMemberWhoPaid] = useState('');
 
-  const [groupMembers, setGroupMembers] = useState([{name: 'iñaki', debts: {'ARG': 0, 'USD': 0}}]);
+  const [groupMembers, setGroupMembers] = useState<Member[]>([{name: 'iñaki', debts: {'ARG': 0, 'USD': 0}}]);
   const [memberName, setMemberName] = useState('');
   const [errorMemberName, setErrorMemberName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,14 +58,36 @@ const GroupPage = () => {
   const handleExpenseNameChange = (e) => setExpenseName(e.target.value);
   const handleAmountChange = (e) => setAmount(Number(e.target.value));
 
+  const updateDebts = (newExpense: Expense) => {
+    const { amount, currency, memberWhoPaid } = newExpense;
+    const totalMembers = groupMembers.length;
+    const amountPerMember = amount / totalMembers;
+    console.log('antes del for:');
+    console.log(groupMembers);
+    groupMembers.forEach(member => {
+      if (member.name == memberWhoPaid) {
+        member.debts[currency] -= amountPerMember;
+      }else{
+        member.debts[currency] += amountPerMember;
+      }
+    });
+    console.log('despues del for:');
+    console.log(groupMembers);
+  }
+
   const handleAddExpense = () => {
     if (expenseName.trim() === '') {
       setErrorExpense('El nombre del gasto es requerido');
       return;
     }
 
+    if (memberWhoPaid.trim() === '') {
+      setErrorExpense('El miembro que pagó el gasto es requerido');
+      return;
+    }
+
     if (amount === 0) {
-      setErrorExpense('El monto del gasto tiene que ser mayor a 0');
+      setErrorExpense('El monto del gasto es requerido y tiene que ser mayor a 0');
       return;
     }
 
@@ -60,11 +95,15 @@ const GroupPage = () => {
       name: expenseName,
       amount: amount,
       currency: currency,
+      memberWhoPaid: memberWhoPaid,
     };
     setExpenses([...expenses, newExpense]);
+    updateDebts(newExpense);
+
     setExpenseName('');
     setAmount(0);
     setCurrency('ARG');
+    setMemberWhoPaid(groupMembers[0].name);
     setErrorExpense('');
   };
 
@@ -205,8 +244,10 @@ const GroupPage = () => {
                 >
                   <Box sx={{ display: 'flex', gap: 2 }}>
                     <div>
-                      <Typography level="title-md">{expense.name}</Typography>
+                      <Typography level="title-bg">{expense.name}</Typography>
                       <Typography level="body-xs">{`${expense.amount} ${expense.currency}`}</Typography>
+                      <Typography level="body-xs">Pagado por {expense.memberWhoPaid}</Typography>
+                      <Typography level="body-xs">Dividido a partes iguales</Typography>
                     </div>
                   </Box>
                   <Button
@@ -286,6 +327,23 @@ const GroupPage = () => {
                   }
                   sx={{ width: 300 }}
                 />
+              </Stack>
+              <Stack spacing={1.5}>
+                <Select
+                    variant="plain"
+                    value={memberWhoPaid}
+                    onChange={(_, value) => setMemberWhoPaid(value!)}
+                    slotProps={{
+                      listbox: {
+                        variant: 'outlined',
+                      },
+                    }}
+                    sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 }}
+                  >
+                  {groupMembers.map((member, key) => (
+                    <Option key={key} value={member.name}>{member.name}</Option>
+                  ))}
+                </Select>
               </Stack>
             </Box>
           </Layout.SidePane>

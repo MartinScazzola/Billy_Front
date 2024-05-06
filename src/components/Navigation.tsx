@@ -13,6 +13,7 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { list } from 'firebase/storage';
 
 export default function Navigation({ groupMembers, handleOpenModal, handleDeleteGroupMember, errorMemberName }) {
   return (
@@ -72,20 +73,28 @@ export default function Navigation({ groupMembers, handleOpenModal, handleDelete
               </ListItemButton>
             </ListItem>
           {groupMembers.map((member, index) => (
-            <ListItem key={index}>
+            <List key={index}>
               <ListItem>
                 <ListItemDecorator>
                   <ArticleRoundedIcon fontSize="small" />
                 </ListItemDecorator>
                 <ListItemContent>{member.name}</ListItemContent>
-                <ListItemContent>Deudas: ARG: {member.debts.ARG} USD: {member.debts.ARG}</ListItemContent>
                 <ListItemButton onClick={() => handleDeleteGroupMember(member.name)}>
                   <ListItemDecorator>
                     <DeleteIcon/>
                   </ListItemDecorator>
-              </ListItemButton>
+                </ListItemButton>
               </ListItem>
-            </ListItem>
+              <ListItem>
+                <ListItemContent>Deudas</ListItemContent>
+              </ListItem>
+              <ListItem>
+                <ListItemContent>ARG: $ {member.debts.ARG}</ListItemContent>
+              </ListItem>
+              <ListItem>
+                <ListItemContent>USD: $ {member.debts.USD}</ListItemContent>
+              </ListItem>
+            </List>
           ))}
         </ListItem>
       </List>
