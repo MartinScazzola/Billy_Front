@@ -17,7 +17,7 @@ import Layout from './Layout';
 import Navigation from './Navigation';
 
 const GroupPage = () => {
-  const { groupName } = useParams(); 
+  const { groupName } = useParams();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const [expenses, setExpenses] = useState([]);
@@ -142,7 +142,7 @@ const GroupPage = () => {
                 placeholder="Monto"
                 value={amount}
                 onChange={handleAmountChange}
-                startDecorator={{ USD: '$', ARG: '$'}[currency]}
+                startDecorator={{ USD: '$', ARG: '$' }[currency]}
                 endDecorator={
                   <React.Fragment>
                     <Divider orientation="vertical" />
