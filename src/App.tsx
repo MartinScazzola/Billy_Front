@@ -7,7 +7,7 @@ import GroupPage from './components/GroupPage';
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/billy/home" />} />
+      <Route path="/" element={<Navigate to="/billy/login" />} />
       <Route path="/billy/login" element={<Login />} />
       <Route path="/billy/signup" element={<Signup />} />
       <Route path="/billy/home" element={<Home />} />
