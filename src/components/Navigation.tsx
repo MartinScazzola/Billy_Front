@@ -1,5 +1,3 @@
-import * as React from 'react';
-import Chip from '@mui/joy/Chip';
 import List from '@mui/joy/List';
 import ListSubheader from '@mui/joy/ListSubheader';
 import ListItem from '@mui/joy/ListItem';
@@ -13,9 +11,9 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { list } from 'firebase/storage';
+import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
-export default function Navigation({ groupMembers, handleOpenModal, handleDeleteGroupMember, errorMemberName }) {
+export default function Navigation({ groupMembers, handleOpenModal, handleDeleteGroupMember} : any) {
   return (
     <List
       size="sm"
@@ -72,7 +70,7 @@ export default function Navigation({ groupMembers, handleOpenModal, handleDelete
                 </ListItemDecorator>
               </ListItemButton>
             </ListItem>
-          {groupMembers.map((member, index) => (
+          {groupMembers.map((member: { name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; debts: { ARG: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; USD: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }; }, index: Key | null | undefined) => (
             <List key={index}>
               <ListItem>
                 <ListItemDecorator>

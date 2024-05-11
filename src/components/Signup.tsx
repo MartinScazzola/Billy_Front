@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import { CssVarsProvider} from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
@@ -8,17 +8,17 @@ import Divider from '@mui/joy/Divider';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import IconButton from '@mui/joy/IconButton';
-import Link from '@mui/joy/Link';
+
 import Input from '@mui/joy/Input';
 import Typography from '@mui/joy/Typography';
 import Stack from '@mui/joy/Stack';
 import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
-import GoogleIcon from './GoogleIcon';
-import { NavLink, useNavigate } from 'react-router-dom';
+
+import { useNavigate } from 'react-router-dom';
 
 // Importar Firebase
 import appFirebase from '../../src/credentials';
-import { signInWithEmailAndPassword, getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import {getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 // Obtener la instancia de autenticación de Firebase
 const auth = getAuth(appFirebase);
@@ -26,7 +26,7 @@ const auth = getAuth(appFirebase);
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
   name: HTMLInputElement;
-  lastName: HTMLInputElement; 
+  lastName: HTMLInputElement;
   password: HTMLInputElement;
   persistent: HTMLInputElement;
 }
@@ -44,13 +44,22 @@ export default function Login() {
     const email = formElements.email.value;
     const password = formElements.password.value;
     const name = formElements.name.value;
-    const lastName = formElements.lastName.value;
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      alert('Registro exitoso!');
+      //const user = userCredential.user;
+      fetch('https://billy-api.onrender.com/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          id_user: null,
+          name: name,
+          email: email
+        }),
+      });
       navigate('/billy/login')
-
     } catch (error) {
       console.error('Error al registrar el usuario:', error);
       alert('Error al registrar el usuario. Por favor, inténtelo de nuevo.');
@@ -98,7 +107,7 @@ export default function Login() {
             sx={{
               width: { xs: '100%', md: '50vw' },
               px: 2,
-              maxWidth: 500, 
+              maxWidth: 500,
             }}
           >
             <Box

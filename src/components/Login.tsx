@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CssVarsProvider, useColorScheme } from '@mui/joy/styles';
+import { CssVarsProvider} from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
@@ -51,6 +51,13 @@ export default function Login() {
       );
     }
   };
+
+  React.useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      navigate('/billy/home');
+    }
+  },[]);
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>

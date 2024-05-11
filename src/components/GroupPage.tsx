@@ -17,7 +17,6 @@ import Option from '@mui/joy/Option';
 
 import Layout from './Layout';
 import Navigation from './Navigation';
-import { set } from 'firebase/database';
 
 type Expense = {
   name: string;
@@ -55,8 +54,8 @@ const GroupPage = () => {
   const [errorExpense, setErrorExpense] = useState('');
   const [currency, setCurrency] = React.useState('ARG');
 
-  const handleExpenseNameChange = (e) => setExpenseName(e.target.value);
-  const handleAmountChange = (e) => setAmount(Number(e.target.value));
+  const handleExpenseNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setExpenseName(e.target.value);
+  const handleAmountChange = (e: { target: { value: any; }; }) => setAmount(Number(e.target.value));
 
   const updateDebts = (newExpense: Expense) => {
     const { amount, currency, memberWhoPaid } = newExpense;
@@ -242,14 +241,7 @@ const GroupPage = () => {
                     listStyle: 'none',
                   }}
                 >
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <div>
-                      <Typography level="title-bg">{expense.name}</Typography>
-                      <Typography level="body-xs">{`${expense.amount} ${expense.currency}`}</Typography>
-                      <Typography level="body-xs">Pagado por {expense.memberWhoPaid}</Typography>
-                      <Typography level="body-xs">Dividido a partes iguales</Typography>
-                    </div>
-                  </Box>
+                  <Typography level="title-lg">{expense.name}</Typography>
                   <Button
                     size="sm"
                     variant="plain"

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { CssVarsProvider, CssBaseline, Typography, Button, Box } from '@mui/joy';
 import '../style_components/Home.css';
+import { getAuth } from 'firebase/auth';
+import appFirebase from '../../src/credentials';
 
 // Definir el tipo para los grupos
 type Group = {
@@ -9,8 +11,10 @@ type Group = {
     members: string[];
     memberCount: number;
 };
+const auth = getAuth(appFirebase);
 
 const Home = () => {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [groupName, setGroupName] = useState('');
     // Usar el tipo definido al declarar el estado
@@ -30,12 +34,34 @@ const Home = () => {
         setGroupName('');
     };
 
+    function handleSignOut() {
+        auth.signOut().then(() => {
+            // Sign-out successful.
+            console.log("Sesión cerrada exitosamente.");
+            navigate('/billy/login');
+        }).catch((error) => {
+            // An error happened.
+            console.error("Error al cerrar sesión:", error);
+        });
+        console.log('Cerrar Sesión');
+    }
+    useEffect(() => {
+        const user = auth.currentUser;
+        if (!user) {
+            navigate('/billy/login');
+        }
+        //console.log('Usuario:', user.email);
+    },[]);
+
     return (
         <CssVarsProvider>
             <CssBaseline />
             <Box sx={{ p: 4 }}>
                 <Button onClick={handleOpenModal} sx={{ mb: 2 }}>
                     Crear nuevo grupo
+                </Button>
+                <Button onClick={handleSignOut} sx={{ mb: 2 }}>
+                    Cerrar Sesión
                 </Button>
 
                 {isModalOpen && (
