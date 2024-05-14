@@ -35,6 +35,42 @@ const Home = () => {
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
 
+  useEffect(() => {
+    fetch(
+      `${dbUrl}/userid?` +
+        new URLSearchParams({
+          email: auth?.currentUser?.email ?? "",
+        }),
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        fetch(`${dbUrl}/users/${data.id_user}/groups`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) =>
+            setGroups(
+              data.map((group: any) => {
+                return {
+                  name: group.name,
+                  members: ["Creador (Ejemplo)"],
+                  memberCount: 1,
+                };
+              })
+            )
+          );
+      });
+  });
+
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
       const newGroup = {
