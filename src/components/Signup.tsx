@@ -1,24 +1,25 @@
-import * as React from 'react';
-import { CssVarsProvider} from '@mui/joy/styles';
-import GlobalStyles from '@mui/joy/GlobalStyles';
-import CssBaseline from '@mui/joy/CssBaseline';
-import Box from '@mui/joy/Box';
-import Button from '@mui/joy/Button';
-import Divider from '@mui/joy/Divider';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import IconButton from '@mui/joy/IconButton';
+import * as React from "react";
+import { CssVarsProvider } from "@mui/joy/styles";
+import GlobalStyles from "@mui/joy/GlobalStyles";
+import CssBaseline from "@mui/joy/CssBaseline";
+import Box from "@mui/joy/Box";
+import Button from "@mui/joy/Button";
+import Divider from "@mui/joy/Divider";
+import FormControl from "@mui/joy/FormControl";
+import FormLabel from "@mui/joy/FormLabel";
+import IconButton from "@mui/joy/IconButton";
 
-import Input from '@mui/joy/Input';
-import Typography from '@mui/joy/Typography';
-import Stack from '@mui/joy/Stack';
-import BadgeRoundedIcon from '@mui/icons-material/BadgeRounded';
+import Input from "@mui/joy/Input";
+import Typography from "@mui/joy/Typography";
+import Stack from "@mui/joy/Stack";
+import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 // Importar Firebase
-import appFirebase from '../../src/credentials';
-import {getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import appFirebase from "../../src/credentials";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { dbUrl } from "../DBUrl";
 
 // Obtener la instancia de autenticación de Firebase
 const auth = getAuth(appFirebase);
@@ -34,7 +35,6 @@ interface SignUpFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-
 export default function Login() {
   const navigate = useNavigate();
 
@@ -48,21 +48,21 @@ export default function Login() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       //const user = userCredential.user;
-      fetch('https://billy-api.onrender.com/users', {
-        method: 'POST',
+      fetch(`${dbUrl} + /users`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           id_user: null,
           name: name,
-          email: email
+          email: email,
         }),
       });
-      navigate('/billy/login')
+      navigate("/billy/login");
     } catch (error) {
-      console.error('Error al registrar el usuario:', error);
-      alert('Error al registrar el usuario. Por favor, inténtelo de nuevo.');
+      console.error("Error al registrar el usuario:", error);
+      alert("Error al registrar el usuario. Por favor, inténtelo de nuevo.");
     }
   };
 
@@ -71,41 +71,41 @@ export default function Login() {
       <CssBaseline />
       <GlobalStyles
         styles={{
-          ':root': {
-            '--Form-maxWidth': '800px',
-            '--Transition-duration': '0.4s',
+          ":root": {
+            "--Form-maxWidth": "800px",
+            "--Transition-duration": "0.4s",
           },
         }}
       />
       <Box
         sx={{
-          display: 'flex',
-          height: '100vh',
+          display: "flex",
+          height: "100vh",
         }}
       >
         <Box
           sx={{
             flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'background.level1',
-            backgroundImage: 'url(/billy_logo.jpeg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "background.level1",
+            backgroundImage: "url(/billy_logo.jpeg)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
           }}
         />
         <Box
           sx={{
             flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Box
             sx={{
-              width: { xs: '100%', md: '50vw' },
+              width: { xs: "100%", md: "50vw" },
               px: 2,
               maxWidth: 500,
             }}
@@ -114,11 +114,11 @@ export default function Login() {
               component="header"
               sx={{
                 py: 3,
-                display: 'flex',
-                justifyContent: 'space-between',
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
-              <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
+              <Box sx={{ gap: 2, display: "flex", alignItems: "center" }}>
                 <IconButton variant="soft" color="primary" size="sm">
                   <BadgeRoundedIcon />
                 </IconButton>
@@ -130,8 +130,8 @@ export default function Login() {
               sx={{
                 py: 2,
                 pb: 5,
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 2,
               }}
             >
