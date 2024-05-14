@@ -69,7 +69,7 @@ const Home = () => {
             )
           );
       });
-  });
+  }, []);
 
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
