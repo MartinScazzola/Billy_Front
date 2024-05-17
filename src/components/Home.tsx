@@ -6,7 +6,16 @@ import {
   Typography,
   Button,
   Box,
+  Menu,
+  MenuItem,
+  IconButton,
 } from "@mui/joy";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import PersonIcon from "@mui/icons-material/Person";
+import FolderIcon from "@mui/icons-material/Folder";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import PeopleIcon from "@mui/icons-material/People";
 import "../style_components/Home.css";
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
@@ -25,7 +34,8 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [groups, setGroups] = useState<Group[]>([]);
-  const [showGroups, setShowGroups] = useState(false); // Estado para mostrar/ocultar la tabla de grupos
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para el menú desplegable del usuario
+  const [notifAnchorEl, setNotifAnchorEl] = useState<null | HTMLElement>(null); // Estado para el menú desplegable de notificaciones
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -62,7 +72,7 @@ const Home = () => {
               data.map((group: any) => {
                 return {
                   name: group.name,
-                  members: ["Creador (Ejemplo)"],
+                  members: [auth?.currentUser?.email ?? ""],
                   memberCount: 1,
                 };
               })
@@ -75,7 +85,7 @@ const Home = () => {
     if (groupName.trim() !== "") {
       const newGroup = {
         name: groupName,
-        members: ["Creador (Ejemplo)"],
+        members: [auth?.currentUser?.email ?? ""],
         memberCount: 1,
       };
       setGroups([...groups, newGroup]); // Agregar el nuevo grupo al estado
@@ -109,11 +119,31 @@ const Home = () => {
     }
   };
 
-  const toggleGroups = () => {
-    setShowGroups(!showGroups); // Cambiar estado para mostrar/ocultar grupos
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    if (anchorEl) {
+      handleMenuClose();
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
-  function handleSignOut() {
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleNotifMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    if (notifAnchorEl) {
+      handleNotifMenuClose();
+    } else {
+      setNotifAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleNotifMenuClose = () => {
+    setNotifAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
     auth
       .signOut()
       .then(() => {
@@ -123,7 +153,8 @@ const Home = () => {
       .catch((error) => {
         console.error("Error al cerrar sesión:", error);
       });
-  }
+  };
+
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) {
@@ -137,58 +168,102 @@ const Home = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
           p: 4,
-          alignItems: "flex-start",
         }}
       >
-        <Box sx={{ width: "50%" }}>
-          <Button onClick={handleOpenModal} sx={{ mb: 2 }}>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <Button
+            onClick={handleOpenModal}
+            startDecorator={<GroupAddIcon />}
+            sx={{ mb: 2 }}
+            variant="solid"
+            color="primary"
+          >
             Crear nuevo grupo
           </Button>
-          {/* Botón "Mis grupos" centrado */}
-          <Box sx={{ justifyContent: "center", textAlign: "center", mt: 4 }}>
-            <Button onClick={toggleGroups} sx={{}}>
-              <Typography level="h4">Grupos</Typography>
-            </Button>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              onClick={handleNotifMenuOpen}
+              sx={{ border: "1px solid grey", mr: 1 }}
+            >
+              <NotificationsIcon />
+            </IconButton>
+            <IconButton
+              onClick={handleMenuOpen}
+              sx={{ border: "1px solid grey" }}
+            >
+              <PersonIcon />
+              <Typography sx={{ ml: 1 }}>
+                {auth?.currentUser?.email ?? "Usuario"}
+              </Typography>
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+            >
+              <MenuItem onClick={handleSignOut}>Cerrar sesión</MenuItem>
+            </Menu>
+            <Menu
+              anchorEl={notifAnchorEl}
+              open={Boolean(notifAnchorEl)}
+              onClose={handleNotifMenuClose}
+            >
+              <MenuItem>Notificación 1</MenuItem>
+              <MenuItem>Notificación 2</MenuItem>
+              <MenuItem>Notificación 3</MenuItem>
+            </Menu>
           </Box>
-          {showGroups && (
-            <Box sx={{ overflowY: "auto" }}>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Nombre del Grupo</th>
-                    <th>Administrador</th>
-                    <th>Cantidad de miembros</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {groups.map((group, index) => (
-                    <tr key={index}>
-                      <td>
-                        <Link
-                          to={`/billy/group/${group.name}`}
-                          className="link"
-                        >
-                          {group.name}
-                        </Link>
-                      </td>
-                      <td>{group.members.join(", ")}</td>
-                      <td>{group.memberCount}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </Box>
-          )}
         </Box>
-
-        <Box>
-          <Button onClick={handleSignOut} sx={{ mb: 2 }}>
-            Cerrar Sesión
-          </Button>
+        <Box
+          sx={{
+            width: "100%",
+            overflowY: "auto",
+            borderRadius: 2,
+            boxShadow: 3,
+            p: 2,
+            bgcolor: "background.paper",
+          }}
+        >
+          <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                  <FolderIcon /> Nombre del Grupo
+                </th>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                  <AdminPanelSettingsIcon /> Administrador
+                </th>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                  <PeopleIcon /> Cantidad de miembros
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {groups.map((group, index) => (
+                <tr key={index} style={{ borderBottom: "1px solid #e0e0e0" }}>
+                  <td style={{ padding: "8px" }}>
+                    <Link to={`/billy/group/${group.name}`} className="link">
+                      {group.name}
+                    </Link>
+                  </td>
+                  <td style={{ padding: "8px" }}>{group.members.join(", ")}</td>
+                  <td style={{ padding: "8px" }}>{group.memberCount}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </Box>
-
         {isModalOpen && (
           <Box
             sx={{

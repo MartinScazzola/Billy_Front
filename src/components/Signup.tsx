@@ -8,12 +8,10 @@ import Divider from "@mui/joy/Divider";
 import FormControl from "@mui/joy/FormControl";
 import FormLabel from "@mui/joy/FormLabel";
 import IconButton from "@mui/joy/IconButton";
-
 import Input from "@mui/joy/Input";
 import Typography from "@mui/joy/Typography";
 import Stack from "@mui/joy/Stack";
 import BadgeRoundedIcon from "@mui/icons-material/BadgeRounded";
-
 import { useNavigate } from "react-router-dom";
 
 // Importar Firebase
@@ -35,7 +33,7 @@ interface SignUpFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-export default function Login() {
+export default function SignUp() {
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<SignUpFormElement>) => {
@@ -47,7 +45,6 @@ export default function Login() {
 
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      //const user = userCredential.user;
       fetch(`${dbUrl}/users`, {
         method: "POST",
         headers: {
@@ -75,6 +72,22 @@ export default function Login() {
             "--Form-maxWidth": "800px",
             "--Transition-duration": "0.4s",
           },
+          '[data-joy-color-scheme="dark"]': {
+            body: {
+              backgroundColor: "#000", // Fondo negro en modo oscuro
+            },
+            ".logo-bg": {
+              backgroundColor: "#000", // Fondo del logo negro en modo oscuro
+            },
+          },
+          '[data-joy-color-scheme="light"]': {
+            body: {
+              backgroundColor: "#fff", // Fondo blanco en modo claro
+            },
+            ".logo-bg": {
+              backgroundColor: "#fff", // Fondo del logo blanco en modo claro
+            },
+          },
         }}
       />
       <Box
@@ -84,17 +97,36 @@ export default function Login() {
         }}
       >
         <Box
+          className="logo-bg"
           sx={{
             flex: 1,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: "background.level1",
-            backgroundImage: "url(/billy_logo.jpeg)",
+            backgroundImage: "url(/billy_logo.jpg)",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
           }}
         />
+        <Box
+          sx={{
+            width: "10px",
+            backgroundColor: "transparent",
+            position: "relative",
+          }}
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              width: "100%",
+              backgroundColor: "primary.main",
+              clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", // Aquí puedes personalizar el diseño ondulado
+            }}
+          />
+        </Box>
         <Box
           sx={{
             flex: 1,
@@ -151,11 +183,11 @@ export default function Login() {
                   </FormControl>
                   <FormControl required>
                     <FormLabel>Name</FormLabel>
-                    <Input type="name" name="name" />
+                    <Input type="text" name="name" />
                   </FormControl>
                   <FormControl required>
                     <FormLabel>Last name</FormLabel>
-                    <Input type="lastName" name="lastName" />
+                    <Input type="text" name="lastName" />
                   </FormControl>
                   <FormControl required>
                     <FormLabel>Password</FormLabel>

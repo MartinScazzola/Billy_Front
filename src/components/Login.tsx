@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CssVarsProvider} from '@mui/joy/styles';
+import { CssVarsProvider } from '@mui/joy/styles';
 import GlobalStyles from '@mui/joy/GlobalStyles';
 import CssBaseline from '@mui/joy/CssBaseline';
 import Box from '@mui/joy/Box';
@@ -57,7 +57,7 @@ export default function Login() {
     if (user) {
       navigate('/billy/home');
     }
-  },[]);
+  }, []);
 
   return (
     <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
@@ -68,6 +68,22 @@ export default function Login() {
             '--Form-maxWidth': '800px',
             '--Transition-duration': '0.4s',
           },
+          '[data-joy-color-scheme="dark"]': {
+            'body': {
+              backgroundColor: '#000', // Fondo negro en modo oscuro
+            },
+            '.logo-bg': {
+              backgroundColor: '#000', // Fondo del logo negro en modo oscuro
+            },
+          },
+          '[data-joy-color-scheme="light"]': {
+            'body': {
+              backgroundColor: '#fff', // Fondo blanco en modo claro
+            },
+            '.logo-bg': {
+              backgroundColor: '#fff', // Fondo del logo blanco en modo claro
+            },
+          },
         }}
       />
       <Box
@@ -77,17 +93,36 @@ export default function Login() {
         }}
       >
         <Box
+          className="logo-bg"
           sx={{
             flex: 1,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'background.level1',
             backgroundImage: 'url(/billy_logo.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
           }}
         />
+        <Box
+          sx={{
+            width: '10px',
+            backgroundColor: 'transparent',
+            position: 'relative',
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              width: '100%',
+              backgroundColor: 'primary.main',
+              clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', // Aquí puedes personalizar el diseño ondulado
+            }}
+          />
+        </Box>
         <Box
           sx={{
             flex: 1,
@@ -100,7 +135,7 @@ export default function Login() {
             sx={{
               width: { xs: '100%', md: '50vw' },
               px: 2,
-              maxWidth: 500, 
+              maxWidth: 500,
             }}
           >
             <Box
