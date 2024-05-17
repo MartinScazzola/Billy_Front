@@ -48,7 +48,7 @@ export default function Login() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       //const user = userCredential.user;
-      fetch(`${dbUrl} + /users`, {
+      fetch(`${dbUrl}/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
