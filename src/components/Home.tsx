@@ -23,6 +23,7 @@ import { dbUrl } from "../DBUrl";
 
 // Definir el tipo para los grupos
 type Group = {
+  id_group: number;
   name: string;
   members: string[];
   memberCount: number;
@@ -71,6 +72,7 @@ const Home = () => {
             setGroups(
               data.map((group: any) => {
                 return {
+                  id_group: group.id_group,
                   name: group.name,
                   members: [auth?.currentUser?.email ?? ""],
                   memberCount: 1,
@@ -84,6 +86,7 @@ const Home = () => {
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
       const newGroup = {
+        id_group: 0,
         name: groupName,
         members: [auth?.currentUser?.email ?? ""],
         memberCount: 1,
@@ -253,12 +256,13 @@ const Home = () => {
               {groups.map((group, index) => (
                 <tr key={index} style={{ borderBottom: "1px solid #e0e0e0" }}>
                   <td style={{ padding: "8px" }}>
-                    <Link to={`/billy/group/${group.name}`} className="link">
+                    <Link to={`/billy/group/${group.id_group}`} className="link">
                       {group.name}
                     </Link>
                   </td>
                   <td style={{ padding: "8px" }}>{group.members.join(", ")}</td>
                   <td style={{ padding: "8px" }}>{group.memberCount}</td>
+                  <td style={{ padding: "8px" }}>{group.id_group}</td>
                 </tr>
               ))}
             </tbody>

@@ -17,6 +17,7 @@ import Option from '@mui/joy/Option';
 
 import Layout from './Layout';
 import Navigation from './Navigation';
+import { dbUrl } from "../DBUrl";
 
 type Expense = {
   name: string;
@@ -31,7 +32,7 @@ type Member = {
 };
 
 const GroupPage = () => {
-  const { groupName } = useParams(); 
+  const { groupName } = useParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -39,7 +40,7 @@ const GroupPage = () => {
   const [amount, setAmount] = useState(0);
   const [memberWhoPaid, setMemberWhoPaid] = useState('');
 
-  const [groupMembers, setGroupMembers] = useState<Member[]>([{name: 'iñaki', debts: {'ARG': 0, 'USD': 0}}]);
+  const [groupMembers, setGroupMembers] = useState<Member[]>([{ name: 'iñaki', debts: { 'ARG': 0, 'USD': 0 } }]);
   const [memberName, setMemberName] = useState('');
   const [errorMemberName, setErrorMemberName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +50,9 @@ const GroupPage = () => {
     setErrorMemberName('');
     setMemberName('');
   }
+
   const handleMemberNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setMemberName(e.target.value);
+  // e.target.value ID de group
 
   const [errorExpense, setErrorExpense] = useState('');
   const [currency, setCurrency] = React.useState('ARG');
@@ -66,7 +69,7 @@ const GroupPage = () => {
     groupMembers.forEach(member => {
       if (member.name == memberWhoPaid) {
         member.debts[currency] -= amountPerMember;
-      }else{
+      } else {
         member.debts[currency] += amountPerMember;
       }
     });
@@ -111,9 +114,26 @@ const GroupPage = () => {
       setErrorMemberName('El nombre del miembro es requerido');
       return;
     }
+
+    const data = new URL(`${dbUrl}/groups/${groupName}/users`);
+    data.searchParams.append('id_group', groupName ?? '');
+    data.searchParams.append('id_user', memberName);
+
+    fetch(data, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log("User added to group:", data);
+      })
+      .catch(error => console.error('Error fetching user list:', error));
+
     const newMember = {
       name: memberName,
-      debts: {'ARG': 0, 'USD': 0},
+      debts: { 'ARG': 0, 'USD': 0 },
     };
     setGroupMembers([...groupMembers, newMember]);
     setMemberName('');
@@ -129,78 +149,78 @@ const GroupPage = () => {
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ p: 4 }}>
-      {isModalOpen && (
-        <React.Fragment>
-          <Box
-            sx={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 9999,
-            }}
-          />
-          <Box
-            sx={{
-              position: 'fixed',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 10000,
-            }}
-          >
+        {isModalOpen && (
+          <React.Fragment>
             <Box
               sx={{
-                bgcolor: 'black',
-                color: 'white',
-                p: 3,
-                pt: 2,
-                borderRadius: '16px',
-                boxShadow: 6,
-                minWidth: '300px',
-                border: '1px solid #bdbdbd',
+                position: 'fixed',
+                inset: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                zIndex: 9999,
+              }}
+            />
+            <Box
+              sx={{
+                position: 'fixed',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 10000,
               }}
             >
-              <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
-              <input
-                type="text"
-                placeholder="Nombre del nuevo miembro"
-                value={memberName}
-                onChange={handleMemberNameChange}
-                className="input"
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  marginBottom: '16px',
-                  padding: '8px',
-                  fontSize: '16px',
-                  border: '1px solid #bdbdbd',
+              <Box
+                sx={{
+                  bgcolor: 'black',
+                  color: 'white',
+                  p: 3,
+                  pt: 2,
                   borderRadius: '16px',
-                  backgroundColor: '#333',
-                  color: 'white'
+                  boxShadow: 6,
+                  minWidth: '300px',
+                  border: '1px solid #bdbdbd',
                 }}
-              />
-              <List>
-                <ListItem nested sx={{ display: 'flex'}}>
-                  <ListSubheader sx={{ fontWeight: '800'}}>
-                    {errorMemberName && <p style={{ color: 'red' }}>{errorMemberName}</p>}
-                  </ListSubheader>
-                </ListItem>
-              </List>
-              <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-                <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
-                  Cancelar
-                </Button>
-                <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
-                  Agregar
-                </Button>
+              >
+                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
+                <input
+                  type="text"
+                  placeholder="ID de nuevo miembro"
+                  value={memberName}
+                  onChange={handleMemberNameChange}
+                  className="input"
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    marginBottom: '16px',
+                    padding: '8px',
+                    fontSize: '16px',
+                    border: '1px solid #bdbdbd',
+                    borderRadius: '16px',
+                    backgroundColor: '#333',
+                    color: 'white'
+                  }}
+                />
+                <List>
+                  <ListItem nested sx={{ display: 'flex' }}>
+                    <ListSubheader sx={{ fontWeight: '800' }}>
+                      {errorMemberName && <p style={{ color: 'red' }}>{errorMemberName}</p>}
+                    </ListSubheader>
+                  </ListItem>
+                </List>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+                  <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
+                    Cancelar
+                  </Button>
+                  <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
+                    Agregar
+                  </Button>
+                </Box>
               </Box>
             </Box>
-          </Box>
-        </React.Fragment>
-      )}
+          </React.Fragment>
+        )}
 
-      
+
         <Box sx={{ p: 4 }}>
           <Typography level="title-lg" textColor="text.secondary" component="h1">
             {`${groupName}`}
@@ -208,7 +228,7 @@ const GroupPage = () => {
         </Box>
         {drawerOpen && (
           <Layout.SideDrawer onClose={() => setDrawerOpen(false)}>
-            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName}/>
+            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
           </Layout.SideDrawer>
         )}
         <Layout.Root
@@ -220,7 +240,7 @@ const GroupPage = () => {
           }}
         >
           <Layout.SideNav>
-            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName}/>
+            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
           </Layout.SideNav>
           <Layout.Main>
             <List
@@ -271,11 +291,11 @@ const GroupPage = () => {
               </Button>
             </Box>
             <List
-                size="sm"
-                sx={{ '--ListItem-radius': 'var(--joy-radius-sm)', '--List-gap': '4px' }}
-              >
-              <ListItem nested sx={{ display: 'flex'}}>
-                <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800'}}>
+              size="sm"
+              sx={{ '--ListItem-radius': 'var(--joy-radius-sm)', '--List-gap': '4px' }}
+            >
+              <ListItem nested sx={{ display: 'flex' }}>
+                <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800' }}>
                   {errorExpense && <p style={{ color: 'red' }}>{errorExpense}</p>}
                 </ListSubheader>
               </ListItem>
@@ -297,7 +317,7 @@ const GroupPage = () => {
                   placeholder="Monto"
                   value={amount}
                   onChange={handleAmountChange}
-                  startDecorator={{ USD: '$', ARG: '$'}[currency]}
+                  startDecorator={{ USD: '$', ARG: '$' }[currency]}
                   endDecorator={
                     <React.Fragment>
                       <Divider orientation="vertical" />
@@ -322,16 +342,16 @@ const GroupPage = () => {
               </Stack>
               <Stack spacing={1.5}>
                 <Select
-                    variant="plain"
-                    value={memberWhoPaid}
-                    onChange={(_, value) => setMemberWhoPaid(value!)}
-                    slotProps={{
-                      listbox: {
-                        variant: 'outlined',
-                      },
-                    }}
-                    sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 }}
-                  >
+                  variant="plain"
+                  value={memberWhoPaid}
+                  onChange={(_, value) => setMemberWhoPaid(value!)}
+                  slotProps={{
+                    listbox: {
+                      variant: 'outlined',
+                    },
+                  }}
+                  sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 }}
+                >
                   {groupMembers.map((member, key) => (
                     <Option key={key} value={member.name}>{member.name}</Option>
                   ))}
