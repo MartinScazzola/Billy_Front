@@ -1,4 +1,27 @@
-# Billy
+# Billy - Aplicación de Gestión de Pagos
+
+Billy es una aplicación de gestión de pagos diseñada para ayudar a los usuarios a gestionar sus gastos y pagos grupales. La aplicación incluye funcionalidades como autenticación de usuarios, creación de grupos y seguimiento de gastos.
+
+## Características
+
+- Autenticación de usuarios (Registro, Inicio de Sesión)
+- Creación y gestión de grupos
+- Seguimiento de gastos para grupos
+- 
+
+## Estructura del Proyecto
+
+### Componentes
+
+- **GoogleIcon.tsx**: Componente de ícono personalizado para la autenticación con Google.
+- **GroupPage.tsx**: Componente para mostrar y gestionar los gastos de un grupo.
+- **Home.tsx**: Componente para la página de inicio, mostrando los grupos del usuario y permitiendo la creación de grupos.
+- **Layout.tsx**: Componente de diseño para estructurar la aplicación.
+- **Login.tsx**: Componente para el inicio de sesión de usuarios.
+- **Navigation.tsx**: Componente para la navegación entre diferentes partes de la aplicación.
+- **Signup.tsx**: Componente para el registro de usuarios.
+
+## Dependencias
 
 Para correr el sitio web ejecutar en la terminal:
 ```shell
@@ -9,33 +32,15 @@ npm install
 npm run dev
 ```
 
-# React + TypeScript + Vite
+## Contribuciones
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Hacer un fork del repositorio.
+- Crear una nueva rama (git checkout -b feature-branch).
+- Hacer commit de tus cambios (git commit -m 'Agregar nueva funcionalidad').
+- Hacer push a la rama (git push origin feature-branch).
+- Abrir un Pull Request.
 
-Currently, two official plugins are available:
+## Licencia
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Este proyecto está licenciado bajo la Licencia MIT.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
