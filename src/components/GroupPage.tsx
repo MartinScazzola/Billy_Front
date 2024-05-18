@@ -231,6 +231,8 @@ const GroupPage = () => {
               >
                 <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
                   <Select
+                    // Poner un placeholder que se agregar nuevo usuario
+                    placeholder="Seleccione nuevo usuario"
                     variant="plain"
                     value={newUser}
                     onChange={(_, value) => setNewUser(value!)}
@@ -242,7 +244,7 @@ const GroupPage = () => {
                         },
                       },
                     }}
-                    sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 , zIndex: 20000}}
+                    sx={{ mr: -1.5, '&:hover': { bgcolor: '#DDDDDD' }, width: 300 , zIndex: 20000}}
                   >
                     {totalUsers.map((member, key) => (
                       <Option key={key} value={member.id_user}>{member.name}</Option>
@@ -406,8 +408,10 @@ const GroupPage = () => {
                   sx={{ width: 300 }}
                 />
               </Stack>
+              <div className='bg-blue-300 inline'>
               <Stack spacing={1.5}>
                 <Select
+                  placeholder="Miembro que lo pagó"
                   variant="plain"
                   value={memberWhoPaid}
                   onChange={(_, value) => setMemberWhoPaid(value!)}
@@ -416,13 +420,14 @@ const GroupPage = () => {
                       variant: 'outlined',
                     },
                   }}
-                  sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 }}
+                  sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300, border: '1px solid #bdbdbd' }}
                 >
                   {groupUsers.map((member, key) => (
                     <Option key={key} value={member.name}>{member.name}</Option>
                   ))}
                 </Select>
               </Stack>
+              </div>
             </Box>
           </Layout.SidePane>
         </Layout.Root>
