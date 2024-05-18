@@ -50,9 +50,12 @@ const GroupPage = () => {
   const [expenseName, setExpenseName] = useState('');
   const [amount, setAmount] = useState(0);
   const [memberWhoPaid, setMemberWhoPaid] = useState('');
+  const [newUser, setNewUser] = useState(0);
 
   const [groupMembers, setGroupMembers] = useState<Member[]>([{ name: 'iñaki', debts: { 'ARG': 0, 'USD': 0 } }]);
-  const [groupUsers, setGroupUsers] = useState<User[]>([]); 
+  const [groupUsers, setGroupUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState<User[]>([]);
+
   const [group, setGroup] = useState<Group>({ id_group: 0, name: 'USD' }); // or const [group, setGroup] = useState<Group | (() => Group)>({});
   const [memberName, setMemberName] = useState('');
   const [errorMemberName, setErrorMemberName] = useState('');
@@ -72,6 +75,7 @@ const GroupPage = () => {
 
   const handleExpenseNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setExpenseName(e.target.value);
   const handleAmountChange = (e: { target: { value: any; }; }) => setAmount(Number(e.target.value));
+
 
   const updateDebts = (newExpense: Expense) => {
     const { amount, currency, memberWhoPaid } = newExpense;
@@ -123,14 +127,15 @@ const GroupPage = () => {
   };
 
   const handleAddGroupMember = () => {
-    if (memberName.trim() === '') {
+    console.log('handleAddGroupMember',newUser);
+    if (newUser == 0) {
       setErrorMemberName('El nombre del miembro es requerido');
       return;
     }
 
     const data = new URL(`${dbUrl}/groups/${groupid}/users`);
     data.searchParams.append('id_group', groupid ?? '');
-    data.searchParams.append('id_user', memberName);
+    data.searchParams.append('id_user', newUser.toString());
 
     fetch(data, {
       method: 'POST',
@@ -140,6 +145,7 @@ const GroupPage = () => {
     })
       .then(response => response.json())
       .then(data => {
+        window.location.reload();
         console.log("User added to group:", data);
       })
       .catch(error => console.error('Error fetching user list:', error));
@@ -175,6 +181,14 @@ const GroupPage = () => {
       .then(data => {
         console.log("User list:", data);
         setGroup(data);
+      })
+      .catch(error => console.error('Error fetching user list:', error));
+
+      fetch(`${dbUrl}/users`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Total users list:", data);
+        setTotalUsers(data);
       })
       .catch(error => console.error('Error fetching user list:', error));
   },[groupid]);
@@ -216,7 +230,25 @@ const GroupPage = () => {
                 }}
               >
                 <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
-                <input
+                  <Select
+                    variant="plain"
+                    value={newUser}
+                    onChange={(_, value) => setNewUser(value!)}
+                    slotProps={{
+                      listbox: {
+                        variant: 'outlined',
+                        sx: {
+                          zIndex: 20000,
+                        },
+                      },
+                    }}
+                    sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 , zIndex: 20000}}
+                  >
+                    {totalUsers.map((member, key) => (
+                      <Option key={key} value={member.id_user}>{member.name}</Option>
+                    ))}
+                  </Select>
+                {/* <input
                   type="text"
                   placeholder="ID de nuevo miembro"
                   value={memberName}
@@ -233,7 +265,7 @@ const GroupPage = () => {
                     backgroundColor: '#333',
                     color: 'white'
                   }}
-                />
+                /> */}
                 <List>
                   <ListItem nested sx={{ display: 'flex' }}>
                     <ListSubheader sx={{ fontWeight: '800' }}>
