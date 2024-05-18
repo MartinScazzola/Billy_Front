@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
-export default function Navigation({ groupMembers, handleOpenModal, handleDeleteGroupMember} : any) {
+export default function Navigation({ groupMembers, groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
   return (
     <List
       size="sm"
@@ -56,21 +56,22 @@ export default function Navigation({ groupMembers, handleOpenModal, handleDelete
         </List>
       </ListItem>
       <List
-          size="sm"
-          sx={{ '--ListItem-radius': 'var(--joy-radius-sm)', '--List-gap': '4px' }}
-        >
-        <ListItem nested sx={{ display: 'flex'}}>
-            <ListItem >
-              <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800'}}>
-                  Miembros del grupo
-              </ListSubheader>
-              <ListItemButton onClick={handleOpenModal}>
-                <ListItemDecorator>
-                  <AddIcon/>
-                </ListItemDecorator>
-              </ListItemButton>
-            </ListItem>
-          {groupMembers.map((member: { name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; debts: { ARG: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; USD: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }; }, index: Key | null | undefined) => (
+        size="sm"
+        sx={{ '--ListItem-radius': 'var(--joy-radius-sm)', '--List-gap': '4px' }}
+      >
+        <ListItem nested sx={{ display: 'flex' }}>
+          <ListItem >
+            <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800' }}>
+              Miembros del grupo
+            </ListSubheader>
+            <ListItemButton onClick={handleOpenModal}>
+              <ListItemDecorator>
+                <AddIcon />
+              </ListItemDecorator>
+            </ListItemButton>
+          </ListItem>
+
+          {groupUsers.map((member: { name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }, index: Key | null | undefined) => (
             <List key={index}>
               <ListItem>
                 <ListItemDecorator>
@@ -83,6 +84,7 @@ export default function Navigation({ groupMembers, handleOpenModal, handleDelete
                   </ListItemDecorator>
                 </ListItemButton>
               </ListItem>
+              {/*
               <ListItem>
                 <ListItemContent>Deudas</ListItemContent>
               </ListItem>
@@ -92,6 +94,7 @@ export default function Navigation({ groupMembers, handleOpenModal, handleDelete
               <ListItem>
                 <ListItemContent>USD: $ {member.debts.USD}</ListItemContent>
               </ListItem>
+              */}
             </List>
           ))}
         </ListItem>

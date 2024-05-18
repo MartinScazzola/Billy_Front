@@ -11,7 +11,7 @@ const App = () => {
       <Route path="/billy/login" element={<Login />} />
       <Route path="/billy/signup" element={<Signup />} />
       <Route path="/billy/home" element={<Home />} />
-      <Route path="/billy/group/:groupName" element={<GroupPage />} /> {/* Ruta para la página de cada grupo */}
+      <Route path="/billy/group/:groupid" element={<GroupPage />} /> {/* Ruta para la página de cada grupo */}
     </Routes>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CssVarsProvider, CssBaseline, Typography, Button, Box } from '@mui/joy';
 import '../style_components/Home.css';
@@ -31,8 +31,19 @@ type Member = {
   debts: { [key: string]: number };
 };
 
+type User = {
+  id_user: number;
+  name: string;
+  email: string;
+};
+
+type Group = {
+  id_group: number;
+  name: string;
+};
+
 const GroupPage = () => {
-  const { groupName } = useParams();
+  const { groupid } = useParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
@@ -41,6 +52,8 @@ const GroupPage = () => {
   const [memberWhoPaid, setMemberWhoPaid] = useState('');
 
   const [groupMembers, setGroupMembers] = useState<Member[]>([{ name: 'iñaki', debts: { 'ARG': 0, 'USD': 0 } }]);
+  const [groupUsers, setGroupUsers] = useState<User[]>([]); 
+  const [group, setGroup] = useState<Group>({ id_group: 0, name: 'USD' }); // or const [group, setGroup] = useState<Group | (() => Group)>({});
   const [memberName, setMemberName] = useState('');
   const [errorMemberName, setErrorMemberName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -115,8 +128,8 @@ const GroupPage = () => {
       return;
     }
 
-    const data = new URL(`${dbUrl}/groups/${groupName}/users`);
-    data.searchParams.append('id_group', groupName ?? '');
+    const data = new URL(`${dbUrl}/groups/${groupid}/users`);
+    data.searchParams.append('id_group', groupid ?? '');
     data.searchParams.append('id_user', memberName);
 
     fetch(data, {
@@ -144,6 +157,27 @@ const GroupPage = () => {
   const handleDeleteGroupMember = (name: string) => {
     setGroupMembers(groupMembers.filter(member => member.name !== name));
   }
+
+  useEffect(() => {
+
+    console.log('useEffect');
+    fetch(`${dbUrl}/groups/${groupid}/users`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("User list:", data);
+        setGroupUsers(data);
+      })
+      .catch(error => console.error('Error fetching user list:', error));
+
+
+      fetch(`${dbUrl}/groups/${groupid}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("User list:", data);
+        setGroup(data);
+      })
+      .catch(error => console.error('Error fetching user list:', error));
+  },[groupid]);
 
   return (
     <CssVarsProvider disableTransitionOnChange>
@@ -223,12 +257,12 @@ const GroupPage = () => {
 
         <Box sx={{ p: 4 }}>
           <Typography level="title-lg" textColor="text.secondary" component="h1">
-            {`${groupName}`}
+            {`${group.name}`}
           </Typography>
         </Box>
         {drawerOpen && (
           <Layout.SideDrawer onClose={() => setDrawerOpen(false)}>
-            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
+            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
           </Layout.SideDrawer>
         )}
         <Layout.Root
@@ -240,7 +274,7 @@ const GroupPage = () => {
           }}
         >
           <Layout.SideNav>
-            <Navigation groupMembers={groupMembers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
+            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
           </Layout.SideNav>
           <Layout.Main>
             <List
@@ -352,7 +386,7 @@ const GroupPage = () => {
                   }}
                   sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300 }}
                 >
-                  {groupMembers.map((member, key) => (
+                  {groupUsers.map((member, key) => (
                     <Option key={key} value={member.name}>{member.name}</Option>
                   ))}
                 </Select>
