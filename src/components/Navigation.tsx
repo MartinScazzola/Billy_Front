@@ -13,7 +13,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
-export default function Navigation({ groupMembers, groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
+export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
   return (
     <List
       size="sm"
