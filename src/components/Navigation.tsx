@@ -77,8 +77,8 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
             </ListItemButton>
           </ListItem>
 
-          {groupUsers.map((user: User, index: number) => (
-            <List key={index}>
+          {groupUsers.map((user: User) => (
+            <List key={user.id_user}>
               <ListItem>
                 <ListItemDecorator>
                   <ArticleRoundedIcon fontSize="small" />
