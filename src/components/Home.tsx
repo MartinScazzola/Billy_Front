@@ -20,6 +20,9 @@ import "../style_components/Home.css";
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
+import ListItemButton from '@mui/joy/ListItemButton';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // Definir el tipo para los grupos
 type Group = {
@@ -43,6 +46,23 @@ const Home = () => {
     setIsModalOpen(false);
     setGroupName(""); // Limpiar el campo después de cerrar el modal
   };
+
+  const handleDeleteGroup = (group_id: number) => {
+    console.log("group_id", group_id)
+    fetch(`${dbUrl}/groups/${group_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.status === 204) {
+        console.log(`Group ${group_id} deleted`);
+        setGroups(groups.filter((group) => group.id_group !== group_id));
+      } else {
+        console.error('Failed to remove user:', response.status);
+    }});
+  };
+
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
 
@@ -85,14 +105,8 @@ const Home = () => {
 
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
-      const newGroup = {
-        id_group: 0,
-        name: groupName,
-        members: [auth?.currentUser?.email ?? ""],
-        memberCount: 1,
-      };
-      setGroups([...groups, newGroup]); // Agregar el nuevo grupo al estado
-      handleCloseModal(); // Cerrar el modal y limpiar el formulario
+      
+      console.log("groupname", groupName)
       fetch(
         `${dbUrl}/userid?` +
           new URLSearchParams({
@@ -104,19 +118,30 @@ const Home = () => {
             "Content-Type": "application/json",
           },
         }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          fetch(`${dbUrl}/groups`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              id_group: 0,
-              name: groupName,
-              participants: [data.id_user],
-            }),
+      ).then((response) => response.json())
+      .then((data_user) => {
+        console.log("data_user", data_user)
+        fetch(`${dbUrl}/groups`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_group: null,
+            name: groupName,
+            participants: [data_user.id_user],
+          }),
+        }).then((response) => response.json())
+          .then((data) => {
+            console.log("data_group", data)
+            const newGroup = {
+              id_group: data.id_group,
+              name: data.name,
+              members: [auth?.currentUser?.email ?? ""],
+              memberCount: 1,
+            };
+            setGroups([...groups, newGroup]);
+            handleCloseModal();
           });
         });
     }
@@ -250,6 +275,8 @@ const Home = () => {
                 <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
                   <PeopleIcon /> Cantidad de miembros
                 </th>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -262,7 +289,13 @@ const Home = () => {
                   </td>
                   <td style={{ padding: "8px" }}>{group.members.join(", ")}</td>
                   <td style={{ padding: "8px" }}>{group.memberCount}</td>
-                  <td style={{ padding: "8px" }}>{group.id_group}</td>
+                  <td style={{ padding: "8px" }}>
+                    <ListItemButton onClick={() => handleDeleteGroup(group.id_group)}>
+                      <ListItemDecorator>
+                        <DeleteIcon/>
+                      </ListItemDecorator>
+                    </ListItemButton>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -318,3 +351,11 @@ const Home = () => {
 };
 
 export default Home;
+
+
+                  {/* <ListItemButton>
+                  <ListItemDecorator>
+                    <DeleteIcon/>
+                  </ListItemDecorator>
+                  </ListItemButton> */}
+                  {/* <td style={{ padding: "8px" }}>{group.id_group}</td> */}
