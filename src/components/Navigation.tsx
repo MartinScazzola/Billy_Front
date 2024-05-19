@@ -13,6 +13,12 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
+type User = {
+  id_user: number;
+  name: string;
+  email: string;
+};
+
 export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
   return (
     <List
@@ -71,14 +77,14 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
             </ListItemButton>
           </ListItem>
 
-          {groupUsers.map((member: { name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }, index: Key | null | undefined) => (
+          {groupUsers.map((user: User, index: number) => (
             <List key={index}>
               <ListItem>
                 <ListItemDecorator>
                   <ArticleRoundedIcon fontSize="small" />
                 </ListItemDecorator>
-                <ListItemContent>{member.name}</ListItemContent>
-                <ListItemButton onClick={() => handleDeleteGroupMember(member.name)}>
+                <ListItemContent>{user.name}</ListItemContent>
+                <ListItemButton onClick={() => handleDeleteGroupMember(user.id_user)}>
                   <ListItemDecorator>
                     <DeleteIcon/>
                   </ListItemDecorator>

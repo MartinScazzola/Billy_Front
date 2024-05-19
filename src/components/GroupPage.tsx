@@ -160,8 +160,24 @@ const GroupPage = () => {
     setIsModalOpen(false);
   }
 
-  const handleDeleteGroupMember = (name: string) => {
-    setGroupMembers(groupMembers.filter(member => member.name !== name));
+  const handleDeleteGroupMember = (id_user: number) => {
+    const api = new URL(`${dbUrl}/groups/${groupid}/users`);
+    api.searchParams.append('id_group', groupid ?? '');
+    api.searchParams.append('id_user', id_user.toString());
+
+    fetch(api, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.status === 204) {
+          console.log(`User ${id_user} removed from group ${groupid}`);
+          // Optionally update the state or perform other actions here
+        } else {
+          console.error('Failed to remove user:', response.status);
+        }
+      })
+      .catch(error => console.error('Error removing user from group:', error));
+    setGroupUsers(groupUsers.filter(member => member.id_user !== id_user));
   }
 
   useEffect(() => {
