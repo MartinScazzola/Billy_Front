@@ -7,9 +7,7 @@ import List from '@mui/joy/List';
 import ListSubheader from '@mui/joy/ListSubheader';
 import ListItem from '@mui/joy/ListItem';
 import Stack from '@mui/joy/Stack';
-import Sheet from '@mui/joy/Sheet';
 
-import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import Divider from '@mui/joy/Divider';
 import Input from '@mui/joy/Input';
 import Select from '@mui/joy/Select';
@@ -18,6 +16,7 @@ import Option from '@mui/joy/Option';
 import Layout from './Layout';
 import Navigation from './Navigation';
 import { dbUrl } from "../DBUrl";
+import ExpenseCard from './ExpenseCard';
 
 type Expense = {
   name: string;
@@ -335,26 +334,7 @@ const GroupPage = () => {
               }}
             >
               {expenses.map((expense, index) => (
-                <Sheet
-                  key={index}
-                  component="li"
-                  variant="outlined"
-                  sx={{
-                    borderRadius: 'sm',
-                    p: 2,
-                    listStyle: 'none',
-                  }}
-                >
-                  <Typography level="title-lg">{expense.name}</Typography>
-                  <Button
-                    size="sm"
-                    variant="plain"
-                    endDecorator={<KeyboardArrowRightRoundedIcon fontSize="small" />}
-                    sx={{ px: 1, mt: 1 }}
-                  >
-                    Expandir
-                  </Button>
-                </Sheet>
+                <ExpenseCard expense={expense} index={index} />
               ))}
             </List>
           </Layout.Main>
