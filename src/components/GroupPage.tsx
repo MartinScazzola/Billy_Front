@@ -191,7 +191,7 @@ const GroupPage = () => {
         if (response.status === 204) {
           console.log(`Expense ${id} removed from group ${groupid}`);
           //setExpenses(expenses.filter(expense => expense.id !== id))
-          window.location.reload();
+          //window.location.reload();
         } else {
           console.error('Failed to remove user:', response.status);
         }
@@ -306,6 +306,17 @@ const GroupPage = () => {
       updateDebts(expenses)
   },[groupid, groupUsers.length, expenses.length]);
 
+  if(debts == undefined){
+    return (<div className="container text-center">
+        <div className="row align-items-center">
+            <div className="col my-4">
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>)
+  }
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
@@ -393,7 +404,7 @@ const GroupPage = () => {
         </Box>
         {drawerOpen && (
           <Layout.SideDrawer onClose={() => setDrawerOpen(false)}>
-            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
+            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} debts={debts}/>
           </Layout.SideDrawer>
         )}
         <Layout.Root
@@ -405,7 +416,7 @@ const GroupPage = () => {
           }}
         >
           <Layout.SideNav>
-            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
+            <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} debts={debts}/>
           </Layout.SideNav>
 
           <Layout.Main>

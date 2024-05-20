@@ -19,7 +19,10 @@ type User = {
   email: string;
 };
 
-export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
+export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember, debts}: any) {
+  const handleprueba = (debts: any) => {
+    console.log("debts - ", debts);
+  }
   return (
     <List
       size="sm"
@@ -89,6 +92,10 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
                     <DeleteIcon/>
                   </ListItemDecorator>
                 </ListItemButton>
+              </ListItem>
+              <ListItem>
+                <ListItemContent> Deuda: ${debts.find((debt: any) => debt.id_user === user.id_user)?.amount || 0
+                }</ListItemContent>
               </ListItem>
             </List>
           ))}
