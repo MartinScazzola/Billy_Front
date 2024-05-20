@@ -42,7 +42,7 @@ export default function ExpenseCard({ expense, index, delete2 } : any) {
               <ListItemContent>
                 <Typography level="title-lg">{expense.name}</Typography>
               </ListItemContent>
-              <ListItemButton onClick={() => delete2(expense.id_expense)}>
+              <ListItemButton onClick={() => delete2(expense.id)}>
                 <ListItemDecorator>
                   <DeleteIcon/>
                 </ListItemDecorator>
@@ -60,7 +60,7 @@ export default function ExpenseCard({ expense, index, delete2 } : any) {
           </Button>
           {isExpanded && (
               <Box sx={{ mt: 2 }}>
-                  <Typography level="body-md">Pagado por {expense.id_user}</Typography>
+                  <Typography level="body-md">Pagado por {expense.memberWhoPaidName}</Typography>
                   <Typography level="body-md">$ {expense.amount} {expense.currency}</Typography>
               </Box>
           )}

@@ -34,6 +34,12 @@ type Member = {
   debts: { [key: string]: number };
 };
 
+type Debts = {
+  id_user: number;
+  amount: number;
+}
+
+
 type User = {
   id_user: number;
   name: string;
@@ -48,6 +54,7 @@ type Group = {
 const GroupPage = () => {
   const { groupid } = useParams();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [debts, setDebts] = useState<Debts[]>([]);
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseName, setExpenseName] = useState('');
@@ -90,21 +97,24 @@ const GroupPage = () => {
   const handleAmountChange = (e: { target: { value: any; }; }) => setAmount(Number(e.target.value));
 
 
-  const updateDebts = (newExpense: Expense) => {
-    const { amount, currency, memberWhoPaid } = newExpense;
-    const totalMembers = groupMembers.length;
-    const amountPerMember = amount / totalMembers;
-    console.log('antes del for:');
-    console.log(groupMembers);
-    groupMembers.forEach(member => {
-      if (member.id_user == memberWhoPaid) {
-        member.debts[currency] -= amountPerMember;
-      } else {
-        member.debts[currency] += amountPerMember;
-      }
-    });
-    console.log('despues del for:');
-    console.log(groupMembers);
+  const updateDebts = (expenses: Expense[]) => {
+    console.log("expenses", expenses)
+    const debts = groupUsers.map(user => ({ id_user: user.id_user, amount: 0 }));
+    console.log('antes del for:', debts);
+    expenses.forEach(expense => {
+      const amountPerMember = expense.amount / expense.members.length;
+      console.log("members", expense.members)
+      expense.members.forEach(id => {
+        console.log("id", id)
+        if (id == expense.memberWhoPaid) {
+          debts.find(debt => debt.id_user === id)!.amount -= amountPerMember * (expense.members.length - 1);
+        } else {
+          debts.find(debt => debt.id_user === id)!.amount += amountPerMember;
+        }
+      });
+    })
+    setDebts(debts);
+    console.log('Debts despues del for:', debts);
   }
 
   const handleAddExpense = () => {
@@ -130,11 +140,13 @@ const GroupPage = () => {
       currency: currency,
       memberWhoPaid: memberWhoPaid,
       memberWhoPaidName: groupUsers.find(member => member.id_user === memberWhoPaid)?.name ?? '',
-      members: groupMembers.map(member => member.id_user),
+      members: groupUsers.map(member => member.id_user),
     };
 
     setExpenses([...expenses, newExpense]);
-    updateDebts(newExpense);
+    updateDebts(expenses);
+
+    console.log('expenses:', expenses);
 
     const expense_post = {
       id_expense: null,
@@ -275,10 +287,24 @@ const GroupPage = () => {
       .then(response => response.json())
       .then(data => {
         console.log("Total expenses list:", data);
-        setExpenses(data.filter((expense: any) => expense.id_group == groupid));
+        const filtered = data.filter((expense: any) => expense.id_group == groupid);
+        const maped = filtered.map((expense: any) => {
+          return {
+            id: expense.id_expense,
+            name: expense.name,
+            amount: expense.amount,
+            currency: expense.currency,
+            memberWhoPaid: expense.id_user,
+            memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense.id_user)?.name ?? '',
+            members: expense.participants,
+          }
+        })
+        setExpenses(maped);
       })
       .catch(error => console.error('Error fetching expenses list:', error));
-  },[groupid]);
+
+      updateDebts(expenses)
+  },[groupid, groupUsers.length, expenses.length]);
 
   return (
     <CssVarsProvider disableTransitionOnChange>
