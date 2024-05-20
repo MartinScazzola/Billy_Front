@@ -18,14 +18,18 @@ import Navigation from './Navigation';
 import { dbUrl } from "../DBUrl";
 import ExpenseCard from './ExpenseCard';
 
-type Expense = {
+export type Expense = {
+  id: number;
   name: string;
   amount: number;
   currency: string;
-  memberWhoPaid: string;
+  memberWhoPaid: number;
+  memberWhoPaidName: string;
+  members: number[];
 };
 
 type Member = {
+  id_user: number; 
   name: string;
   debts: { [key: string]: number };
 };
@@ -48,10 +52,20 @@ const GroupPage = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [expenseName, setExpenseName] = useState('');
   const [amount, setAmount] = useState(0);
-  const [memberWhoPaid, setMemberWhoPaid] = useState('');
+  const [memberWhoPaid, setMemberWhoPaid] = useState(0);
+  const [membersWhoParticipated, setMembersWhoParticipated] = useState<string[]>([]);
+
+  const toggleMember = (memberName: string) => {
+    if (membersWhoParticipated.includes(memberName)) {
+      setMembersWhoParticipated(membersWhoParticipated.filter((name) => name !== memberName));
+    } else {
+      setMembersWhoParticipated([...membersWhoParticipated, memberName]);
+    }
+  };
+
   const [newUser, setNewUser] = useState(0);
 
-  const [groupMembers, setGroupMembers] = useState<Member[]>([{ name: 'iñaki', debts: { 'ARG': 0, 'USD': 0 } }]);
+  const [groupMembers, setGroupMembers] = useState<Member[]>([]);
   const [groupUsers, setGroupUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState<User[]>([]);
 
@@ -83,7 +97,7 @@ const GroupPage = () => {
     console.log('antes del for:');
     console.log(groupMembers);
     groupMembers.forEach(member => {
-      if (member.name == memberWhoPaid) {
+      if (member.id_user == memberWhoPaid) {
         member.debts[currency] -= amountPerMember;
       } else {
         member.debts[currency] += amountPerMember;
@@ -99,7 +113,7 @@ const GroupPage = () => {
       return;
     }
 
-    if (memberWhoPaid.trim() === '') {
+    if (memberWhoPaid === 0) {
       setErrorExpense('El miembro que pagó el gasto es requerido');
       return;
     }
@@ -110,20 +124,68 @@ const GroupPage = () => {
     }
 
     const newExpense = {
+      id: null, 
       name: expenseName,
       amount: amount,
       currency: currency,
       memberWhoPaid: memberWhoPaid,
+      memberWhoPaidName: groupUsers.find(member => member.id_user === memberWhoPaid)?.name ?? '',
+      members: groupMembers.map(member => member.id_user),
     };
+
     setExpenses([...expenses, newExpense]);
     updateDebts(newExpense);
+
+    const expense_post = {
+      id_expense: null,
+      id_group: groupid,
+      id_user: memberWhoPaid,
+      name: expenseName,
+      amount: amount,
+      currency: currency,
+      participants: groupUsers.map(member => member.id_user),
+    }
+
+    const data = new URL(`${dbUrl}/expenses`);
+
+    fetch(data, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(expense_post)
+    })
+      .then(response => response.json())
+      .then(data => {
+        window.location.reload();
+        console.log("User added to group:", data);
+      })
+      .catch(error => console.error('Error fetching user list:', error));
 
     setExpenseName('');
     setAmount(0);
     setCurrency('ARG');
-    setMemberWhoPaid(groupMembers[0].name);
+    setMemberWhoPaid(groupUsers[0].id_user);
     setErrorExpense('');
   };
+
+  const handleDeleteExpense = (id: number) => {
+    const api = new URL(`${dbUrl}/groups/${groupid}/expenses/${id}`);
+
+    fetch(api, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.status === 204) {
+          console.log(`Expense ${id} removed from group ${groupid}`);
+          // Optionally update the state or perform other actions here
+        } else {
+          console.error('Failed to remove user:', response.status);
+        }
+      })
+      .catch(error => console.error('Error removing user from group:', error));
+    setExpenses(expenses.filter(expense => expense.id !== id));
+  }
 
   const handleAddGroupMember = () => {
     console.log('handleAddGroupMember',newUser);
@@ -150,6 +212,7 @@ const GroupPage = () => {
       .catch(error => console.error('Error fetching user list:', error));
 
     const newMember = {
+      id_user: newUser,
       name: memberName,
       debts: { 'ARG': 0, 'USD': 0 },
     };
@@ -188,7 +251,7 @@ const GroupPage = () => {
         console.log("User list:", data);
         setGroupUsers(data);
       })
-      .catch(error => console.error('Error fetching user list:', error));
+      .catch(error => console.error('Error fetching group:', error));
 
 
       fetch(`${dbUrl}/groups/${groupid}`)
@@ -197,7 +260,7 @@ const GroupPage = () => {
         console.log("User list:", data);
         setGroup(data);
       })
-      .catch(error => console.error('Error fetching user list:', error));
+      .catch(error => console.error('Error fetching groups list:', error));
 
       fetch(`${dbUrl}/users`)
       .then(response => response.json())
@@ -206,103 +269,95 @@ const GroupPage = () => {
         setTotalUsers(data);
       })
       .catch(error => console.error('Error fetching user list:', error));
+
+      fetch(`${dbUrl}/expenses`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Total expenses list:", data);
+        setExpenses(data);
+      })
+      .catch(error => console.error('Error fetching expenses list:', error));
   },[groupid]);
 
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ p: 4 }}>
+        
+        {/* NAVIGATION */}
+
         {isModalOpen && (
-          <React.Fragment>
-            <Box
-              sx={{
-                position: 'fixed',
-                inset: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                zIndex: 9999,
-              }}
-            />
-            <Box
-              sx={{
-                position: 'fixed',
-                inset: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 10000,
-              }}
-            >
+            <React.Fragment>
               <Box
                 sx={{
-                  bgcolor: 'black',
-                  color: 'white',
-                  p: 3,
-                  pt: 2,
-                  borderRadius: '16px',
-                  boxShadow: 6,
-                  minWidth: '300px',
-                  border: '1px solid #bdbdbd',
+                  position: 'fixed',
+                  inset: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  zIndex: 9999,
+                }}
+              />
+              <Box
+                sx={{
+                  position: 'fixed',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 10000,
                 }}
               >
-                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
-                  <Select
-                    // Poner un placeholder que se agregar nuevo usuario
-                    placeholder="Seleccione nuevo usuario"
-                    variant="plain"
-                    value={newUser}
-                    onChange={(_, value) => setNewUser(value!)}
-                    slotProps={{
-                      listbox: {
-                        variant: 'outlined',
-                        sx: {
-                          zIndex: 20000,
-                        },
-                      },
-                    }}
-                    sx={{ mr: -1.5, '&:hover': { bgcolor: '#DDDDDD' }, width: 300 , zIndex: 20000}}
-                  >
-                    {totalUsers.map((member, key) => (
-                      <Option key={key} value={member.id_user}>{member.name}</Option>
-                    ))}
-                  </Select>
-                {/* <input
-                  type="text"
-                  placeholder="ID de nuevo miembro"
-                  value={memberName}
-                  onChange={handleMemberNameChange}
-                  className="input"
-                  style={{
-                    display: 'block',
-                    width: '100%',
-                    marginBottom: '16px',
-                    padding: '8px',
-                    fontSize: '16px',
-                    border: '1px solid #bdbdbd',
+                <Box
+                  sx={{
+                    bgcolor: 'black',
+                    color: 'white',
+                    p: 3,
+                    pt: 2,
                     borderRadius: '16px',
-                    backgroundColor: '#333',
-                    color: 'white'
+                    boxShadow: 6,
+                    minWidth: '300px',
+                    border: '1px solid #bdbdbd',
                   }}
-                /> */}
-                <List>
-                  <ListItem nested sx={{ display: 'flex' }}>
-                    <ListSubheader sx={{ fontWeight: '800' }}>
-                      {errorMemberName && <p style={{ color: 'red' }}>{errorMemberName}</p>}
-                    </ListSubheader>
-                  </ListItem>
-                </List>
-                <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
-                  <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
-                    Cancelar
-                  </Button>
-                  <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
-                    Agregar
-                  </Button>
+                >
+                  <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
+                    <Select
+                      // Poner un placeholder que se agregar nuevo usuario
+                      placeholder="Seleccione nuevo usuario"
+                      variant="plain"
+                      value={newUser}
+                      onChange={(_, value) => setNewUser(value!)}
+                      slotProps={{
+                        listbox: {
+                          variant: 'outlined',
+                          sx: {
+                            zIndex: 20000,
+                          },
+                        },
+                      }}
+                      sx={{ mr: -1.5, '&:hover': { bgcolor: '#DDDDDD' }, width: 300 , zIndex: 20000}}
+                    >
+                      {totalUsers.map((member, key) => (
+                        <Option key={key} value={member.id_user}>{member.name}</Option>
+                      ))}
+                    </Select>
+                  <List>
+                    <ListItem nested sx={{ display: 'flex' }}>
+                      <ListSubheader sx={{ fontWeight: '800' }}>
+                        {errorMemberName && <p style={{ color: 'red' }}>{errorMemberName}</p>}
+                      </ListSubheader>
+                    </ListItem>
+                  </List>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
+                    <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
+                      Cancelar
+                    </Button>
+                    <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
+                      Agregar
+                    </Button>
+                  </Box>
                 </Box>
               </Box>
-            </Box>
-          </React.Fragment>
-        )}
-
+            </React.Fragment>
+          )}
 
         <Box sx={{ p: 4 }}>
           <Typography level="title-lg" textColor="text.secondary" component="h1">
@@ -325,6 +380,7 @@ const GroupPage = () => {
           <Layout.SideNav>
             <Navigation groupMembers={groupMembers} groupUsers={groupUsers} handleOpenModal={handleOpenModal} handleDeleteGroupMember={handleDeleteGroupMember} errorMemberName={errorMemberName} />
           </Layout.SideNav>
+
           <Layout.Main>
             <List
               sx={{
@@ -405,24 +461,24 @@ const GroupPage = () => {
                 />
               </Stack>
               <div className='bg-blue-300 inline'>
-              <Stack spacing={1.5}>
-                <Select
-                  placeholder="Miembro que lo pagó"
-                  variant="plain"
-                  value={memberWhoPaid}
-                  onChange={(_, value) => setMemberWhoPaid(value!)}
-                  slotProps={{
-                    listbox: {
-                      variant: 'outlined',
-                    },
-                  }}
-                  sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300, border: '1px solid #bdbdbd' }}
-                >
-                  {groupUsers.map((member, key) => (
-                    <Option key={key} value={member.name}>{member.name}</Option>
-                  ))}
-                </Select>
-              </Stack>
+                <Stack spacing={1.5}>
+                  <Select
+                    placeholder="Miembro que lo pagó"
+                    variant="plain"
+                    value={memberWhoPaid}
+                    onChange={(_, value) => setMemberWhoPaid(value!)}
+                    slotProps={{
+                      listbox: {
+                        variant: 'outlined',
+                      },
+                    }}
+                    sx={{ mr: -1.5, '&:hover': { bgcolor: 'transparent' }, width: 300, border: '1px solid #bdbdbd' }}
+                  >
+                    {groupUsers.map((member, key) => (
+                      <Option key={key} value={member.id_user}>{member.name}</Option>
+                    ))}
+                  </Select>
+                </Stack>
               </div>
             </Box>
           </Layout.SidePane>

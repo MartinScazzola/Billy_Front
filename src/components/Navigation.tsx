@@ -90,17 +90,6 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
                   </ListItemDecorator>
                 </ListItemButton>
               </ListItem>
-              {/*
-              <ListItem>
-                <ListItemContent>Deudas</ListItemContent>
-              </ListItem>
-              <ListItem>
-                <ListItemContent>ARG: $ {member.debts.ARG}</ListItemContent>
-              </ListItem>
-              <ListItem>
-                <ListItemContent>USD: $ {member.debts.USD}</ListItemContent>
-              </ListItem>
-              */}
             </List>
           ))}
         </ListItem>
