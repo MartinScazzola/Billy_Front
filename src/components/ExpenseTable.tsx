@@ -9,7 +9,7 @@ export default function ClientsTable({ items, deleteFunction }: any) {
                     <th>Nombre</th>
                     <th>Pagado Por</th>
                     <th>Monto</th>
-                    <th>Eliminar</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
