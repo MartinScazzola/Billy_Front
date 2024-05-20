@@ -11,7 +11,6 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
 type User = {
   id_user: number;
@@ -19,7 +18,7 @@ type User = {
   email: string;
 };
 
-export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember }: any) {
+export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember, debts}: any) {
   return (
     <List
       size="sm"
@@ -90,17 +89,10 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
                   </ListItemDecorator>
                 </ListItemButton>
               </ListItem>
-              {/*
               <ListItem>
-                <ListItemContent>Deudas</ListItemContent>
+                <ListItemContent> Deuda: ${debts.find((debt: any) => debt.id_user === user.id_user)?.amount || 0
+                }</ListItemContent>
               </ListItem>
-              <ListItem>
-                <ListItemContent>ARG: $ {member.debts.ARG}</ListItemContent>
-              </ListItem>
-              <ListItem>
-                <ListItemContent>USD: $ {member.debts.USD}</ListItemContent>
-              </ListItem>
-              */}
             </List>
           ))}
         </ListItem>
