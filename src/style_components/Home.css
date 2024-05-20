@@ -3,7 +3,7 @@
     width: 100%;
     margin-top: 1rem;
     border-collapse: collapse;
-    background-color: #252424; /* Fondo en escala de grises */
+    background-color: #ffffff; /* Fondo en escala de grises */
     border-radius: 16px; /* Bordes redondeados */
     overflow: hidden; /* Asegura que el border-radius se aplique correctamente */
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); /* Sombra suave */
@@ -20,6 +20,7 @@
   
   .table th {
     background-color: #000000; /* Cabezera en un tono más oscuro de gris */
+    color: rgb(201, 201, 201);
   }
   
   .link {
@@ -30,4 +31,3 @@
   .link:hover {
     text-decoration: underline; /* Subrayar al hacer hover para indicar clic */
   }
-  

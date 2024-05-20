@@ -17,6 +17,8 @@ import FolderIcon from "@mui/icons-material/Folder";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import PeopleIcon from "@mui/icons-material/People";
 import "../style_components/Home.css";
+import "../App.css";
+
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
@@ -60,7 +62,8 @@ const Home = () => {
         setGroups(groups.filter((group) => group.id_group !== group_id));
       } else {
         console.error('Failed to remove user:', response.status);
-    }});
+      }
+    });
   };
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -69,9 +72,9 @@ const Home = () => {
   useEffect(() => {
     fetch(
       `${dbUrl}/userid?` +
-        new URLSearchParams({
-          email: auth?.currentUser?.email ?? "",
-        }),
+      new URLSearchParams({
+        email: auth?.currentUser?.email ?? "",
+      }),
       {
         method: "GET",
         headers: {
@@ -95,7 +98,6 @@ const Home = () => {
                   id_group: group.id_group,
                   name: group.name,
                   members: [auth?.currentUser?.email ?? ""],
-                  memberCount: 1,
                 };
               })
             )
@@ -105,13 +107,13 @@ const Home = () => {
 
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
-      
+
       console.log("groupname", groupName)
       fetch(
         `${dbUrl}/userid?` +
-          new URLSearchParams({
-            email: auth?.currentUser?.email ?? "",
-          }),
+        new URLSearchParams({
+          email: auth?.currentUser?.email ?? "",
+        }),
         {
           method: "GET",
           headers: {
@@ -119,30 +121,30 @@ const Home = () => {
           },
         }
       ).then((response) => response.json())
-      .then((data_user) => {
-        console.log("data_user", data_user)
-        fetch(`${dbUrl}/groups`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_group: null,
-            name: groupName,
-            participants: [data_user.id_user],
-          }),
-        }).then((response) => response.json())
-          .then((data) => {
-            console.log("data_group", data)
-            const newGroup = {
-              id_group: data.id_group,
-              name: data.name,
-              members: [auth?.currentUser?.email ?? ""],
-              memberCount: 1,
-            };
-            setGroups([...groups, newGroup]);
-            handleCloseModal();
-          });
+        .then((data_user) => {
+          console.log("data_user", data_user)
+          fetch(`${dbUrl}/groups`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id_group: null,
+              name: groupName,
+              participants: [data_user.id_user],
+            }),
+          }).then((response) => response.json())
+            .then((data) => {
+              console.log("data_group", data)
+              const newGroup = {
+                id_group: data.id_group,
+                name: data.name,
+                members: [auth?.currentUser?.email ?? ""],
+                memberCount: 1,
+              };
+              setGroups([...groups, newGroup]);
+              handleCloseModal();
+            });
         });
     }
   };
@@ -192,7 +194,6 @@ const Home = () => {
 
   return (
     <CssVarsProvider>
-      <CssBaseline />
       <Box
         sx={{
           display: "flex",
@@ -212,9 +213,9 @@ const Home = () => {
         >
           <Button
             onClick={handleOpenModal}
-            startDecorator={<GroupAddIcon />}
+            startDecorator={<GroupAddIcon/>}
             sx={{ mb: 2 }}
-            variant="solid"
+            variant="outlined"
             color="primary"
           >
             Crear nuevo grupo
@@ -264,18 +265,10 @@ const Home = () => {
           }}
         >
           <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
+            <thead >
               <tr>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <FolderIcon /> Nombre del Grupo
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <AdminPanelSettingsIcon /> Administrador
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <PeopleIcon /> Cantidad de miembros
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }} >
+                  <FolderIcon className="bg-black"/> Nombre del Grupo
                 </th>
               </tr>
             </thead>
@@ -287,20 +280,12 @@ const Home = () => {
                       {group.name}
                     </Link>
                   </td>
-                  <td style={{ padding: "8px" }}>{group.members.join(", ")}</td>
-                  <td style={{ padding: "8px" }}>{group.memberCount}</td>
-                  <td style={{ padding: "8px" }}>
-                    <ListItemButton onClick={() => handleDeleteGroup(group.id_group)}>
-                      <ListItemDecorator>
-                        <DeleteIcon/>
-                      </ListItemDecorator>
-                    </ListItemButton>
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </Box>
+
         {isModalOpen && (
           <Box
             sx={{
@@ -353,9 +338,9 @@ const Home = () => {
 export default Home;
 
 
-                  {/* <ListItemButton>
+{/* <ListItemButton>
                   <ListItemDecorator>
                     <DeleteIcon/>
                   </ListItemDecorator>
                   </ListItemButton> */}
-                  {/* <td style={{ padding: "8px" }}>{group.id_group}</td> */}
+{/* <td style={{ padding: "8px" }}>{group.id_group}</td> */ }
