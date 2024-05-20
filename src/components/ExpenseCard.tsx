@@ -17,16 +17,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Expense } from './GroupPage';
 
-type ExpenseCardProps = {
-    expense: Expense;
-    index: number;
-    handleDeleteExpense: (id: number) => void;
-};
 
-const ExpenseCard: React.FunctionComponent<ExpenseCardProps> = ({ expense, index, handleDeleteExpense }) => {
+export default function ExpenseCard({ expense, index, delete2 } : any) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExpandClick = () => {
+      console.log("expense - ", expense);
       setIsExpanded(!isExpanded);
   };
 
@@ -46,7 +42,7 @@ const ExpenseCard: React.FunctionComponent<ExpenseCardProps> = ({ expense, index
               <ListItemContent>
                 <Typography level="title-lg">{expense.name}</Typography>
               </ListItemContent>
-              <ListItemButton onClick={() => handleDeleteExpense(expense.id)}>
+              <ListItemButton onClick={() => delete2(expense.id_expense)}>
                 <ListItemDecorator>
                   <DeleteIcon/>
                 </ListItemDecorator>
@@ -64,13 +60,10 @@ const ExpenseCard: React.FunctionComponent<ExpenseCardProps> = ({ expense, index
           </Button>
           {isExpanded && (
               <Box sx={{ mt: 2 }}>
-                  <Typography level="body-md">Pagado por {expense.memberWhoPaidName}</Typography>
+                  <Typography level="body-md">Pagado por {expense.id_user}</Typography>
                   <Typography level="body-md">$ {expense.amount} {expense.currency}</Typography>
               </Box>
           )}
       </Sheet>
   );
 };
-
-
-export default ExpenseCard;

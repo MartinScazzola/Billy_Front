@@ -124,7 +124,7 @@ const GroupPage = () => {
     }
 
     const newExpense = {
-      id: null, 
+      id: 0, 
       name: expenseName,
       amount: amount,
       currency: currency,
@@ -157,7 +157,6 @@ const GroupPage = () => {
     })
       .then(response => response.json())
       .then(data => {
-        window.location.reload();
         console.log("User added to group:", data);
       })
       .catch(error => console.error('Error fetching user list:', error));
@@ -170,6 +169,7 @@ const GroupPage = () => {
   };
 
   const handleDeleteExpense = (id: number) => {
+    console.log('handleDeleteExpense - ',id);
     const api = new URL(`${dbUrl}/expenses/${id}`);
 
     fetch(api, {
@@ -178,7 +178,8 @@ const GroupPage = () => {
       .then(response => {
         if (response.status === 204) {
           console.log(`Expense ${id} removed from group ${groupid}`);
-          // Optionally update the state or perform other actions here
+          //setExpenses(expenses.filter(expense => expense.id !== id))
+          window.location.reload();
         } else {
           console.error('Failed to remove user:', response.status);
         }
@@ -274,7 +275,7 @@ const GroupPage = () => {
       .then(response => response.json())
       .then(data => {
         console.log("Total expenses list:", data);
-        setExpenses(data);
+        setExpenses(data.filter((expense: any) => expense.id_group == groupid));
       })
       .catch(error => console.error('Error fetching expenses list:', error));
   },[groupid]);
@@ -390,7 +391,7 @@ const GroupPage = () => {
               }}
             >
               {expenses.map((expense, index) => (
-                <ExpenseCard expense={expense} index={index} />
+                <ExpenseCard expense={expense} index={index} delete2={handleDeleteExpense} />
               ))}
             </List>
           </Layout.Main>
