@@ -11,7 +11,6 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from 'react';
 
 type User = {
   id_user: number;
@@ -20,9 +19,6 @@ type User = {
 };
 
 export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember, debts}: any) {
-  const handleprueba = (debts: any) => {
-    console.log("debts - ", debts);
-  }
   return (
     <List
       size="sm"

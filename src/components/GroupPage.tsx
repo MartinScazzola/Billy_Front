@@ -14,9 +14,9 @@ import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 
 import Layout from './Layout';
-import Navigation from './Navigation';
 import { dbUrl } from "../DBUrl";
 import ExpenseCard from './ExpenseCard';
+import Navigation from './Navigation';
 
 export type Expense = {
   id: number;
@@ -60,15 +60,14 @@ const GroupPage = () => {
   const [expenseName, setExpenseName] = useState('');
   const [amount, setAmount] = useState(0);
   const [memberWhoPaid, setMemberWhoPaid] = useState(0);
-  const [membersWhoParticipated, setMembersWhoParticipated] = useState<string[]>([]);
 
-  const toggleMember = (memberName: string) => {
-    if (membersWhoParticipated.includes(memberName)) {
-      setMembersWhoParticipated(membersWhoParticipated.filter((name) => name !== memberName));
-    } else {
-      setMembersWhoParticipated([...membersWhoParticipated, memberName]);
-    }
-  };
+  // const toggleMember = (memberName: string) => {
+  //   if (membersWhoParticipated.includes(memberName)) {
+  //     setMembersWhoParticipated(membersWhoParticipated.filter((name) => name !== memberName));
+  //   } else {
+  //     setMembersWhoParticipated([...membersWhoParticipated, memberName]);
+  //   }
+  // };
 
   const [newUser, setNewUser] = useState(0);
 
@@ -86,9 +85,6 @@ const GroupPage = () => {
     setErrorMemberName('');
     setMemberName('');
   }
-
-  const handleMemberNameChange = (e: React.ChangeEvent<HTMLInputElement>) => setMemberName(e.target.value);
-  // e.target.value ID de group
 
   const [errorExpense, setErrorExpense] = useState('');
   const [currency, setCurrency] = React.useState('ARG');
@@ -321,8 +317,6 @@ const GroupPage = () => {
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
       <Box sx={{ p: 4 }}>
-        
-        {/* NAVIGATION */}
 
         {isModalOpen && (
             <React.Fragment>

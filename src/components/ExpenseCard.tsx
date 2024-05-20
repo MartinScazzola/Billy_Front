@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Sheet from '@mui/joy/Sheet';
-import { CssVarsProvider, CssBaseline, Typography, Button, Box } from '@mui/joy';
+import {Typography, Button, Box } from '@mui/joy';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import EditIcon from '@mui/icons-material/Edit';
+
 
 import List from '@mui/joy/List';
-import ListSubheader from '@mui/joy/ListSubheader';
+
 import ListItem from '@mui/joy/ListItem';
 import ListItemButton from '@mui/joy/ListItemButton';
 import ListItemDecorator from '@mui/joy/ListItemDecorator';
@@ -15,7 +15,7 @@ import ListItemContent from '@mui/joy/ListItemContent';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 
-import { Expense } from './GroupPage';
+
 
 
 export default function ExpenseCard({ expense, index, delete2 } : any) {
