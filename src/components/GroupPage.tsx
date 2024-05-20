@@ -170,7 +170,7 @@ const GroupPage = () => {
   };
 
   const handleDeleteExpense = (id: number) => {
-    const api = new URL(`${dbUrl}/groups/${groupid}/expenses/${id}`);
+    const api = new URL(`${dbUrl}/expenses/${id}`);
 
     fetch(api, {
       method: 'DELETE',
