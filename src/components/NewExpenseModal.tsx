@@ -2,7 +2,7 @@ import { useState } from "react";
 import { dbUrl } from "../DBUrl";
 import { useParams } from "react-router-dom";
 
-export default function NewExpenseModal({ groupUsers, cancelFunction }: any) {
+export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, setExpenses }: any) {
     const { groupid } = useParams();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +22,7 @@ export default function NewExpenseModal({ groupUsers, cancelFunction }: any) {
         }
 
         const data = new URL(`${dbUrl}/expenses`);
-
+        
         fetch(data, {
             method: 'POST',
             headers: {
@@ -32,10 +32,20 @@ export default function NewExpenseModal({ groupUsers, cancelFunction }: any) {
         })
             .then(response => response.json())
             .then(data => {
-                window.location.reload();
+                const newExpense = {
+                    id: data.id_expense,
+                    name: expense_post.name,
+                    amount: expense_post.amount,
+                    currency: expense_post.currency,
+                    memberWhoPaid: expense_post.id_user,
+                    memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense_post.id_user)?.name ?? '',
+                    members: expense_post.participants,
+                };
+                //addExpenseToState(newExpense);
+                setExpenses([...expenses, newExpense])
+                cancelFunction();
             })
-            .catch(error => console.error('Error fetching user list:', error));
-            
+            .catch(error => console.error('Error adding expense:', error));
     };
 
     return (
@@ -67,4 +77,8 @@ export default function NewExpenseModal({ groupUsers, cancelFunction }: any) {
     );
 
 
+}
+
+function addExpenseToState(newExpense: { id: any; name: FormDataEntryValue | null; amount: FormDataEntryValue | null; currency: string; memberWhoPaid: FormDataEntryValue | null; memberWhoPaidName: any; members: any; }) {
+    throw new Error("Function not implemented.");
 }

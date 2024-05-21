@@ -33,17 +33,16 @@ export type Expense = {
   members: number[];
 };
 
-type Member = {
-  id_user: number;
-  name: string;
-  debts: { [key: string]: number };
-};
+// type Member = {
+//   id_user: number;
+//   name: string;
+//   debts: { [key: string]: number };
+// };
 
 type Debts = {
   id_user: number;
   amount: number;
 }
-
 
 type User = {
   id_user: number;
@@ -71,7 +70,6 @@ const GroupPage = () => {
 
   const [newUser, setNewUser] = useState(0);
 
-  const [groupMembers, setGroupMembers] = useState<Member[]>([]);
   const [groupUsers, setGroupUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState<User[]>([]);
 
@@ -98,6 +96,12 @@ const GroupPage = () => {
   const newExpenseModal = () => {
     setExpenseModal(true);
   };
+  
+  //Para el new expense modal
+  const handleAddExpenseToState = (newExpense: any) => {
+    setExpenses([...expenses, newExpense]);
+    updateDebts([...expenses, newExpense]);
+  };
 
 
   const updateDebts = (expenses: Expense[]) => {
@@ -109,10 +113,15 @@ const GroupPage = () => {
       console.log("members", expense.members)
       expense.members.forEach(id => {
         console.log("id", id)
+        const memberDebt = debts.find(debt => debt.id_user === id);
         if (id == expense.memberWhoPaid) {
-          debts.find(debt => debt.id_user === id)!.amount -= amountPerMember * (expense.members.length - 1);
+          if (memberDebt != undefined ){
+            memberDebt.amount -= amountPerMember * (expense.members.length - 1);
+          }
         } else {
-          debts.find(debt => debt.id_user === id)!.amount += amountPerMember;
+          if(memberDebt != undefined){
+            memberDebt.amount += amountPerMember;
+          }
         }
       });
     })
@@ -206,40 +215,39 @@ const GroupPage = () => {
 
   const handleAddGroupMember = () => {
     console.log('handleAddGroupMember', newUser);
-    if (newUser == 0) {
+    if (newUser === 0) {
       setErrorMemberName('El nombre del miembro es requerido');
       return;
     }
-
+  
     const data = new URL(`${dbUrl}/groups/${groupid}/users`);
     data.searchParams.append('id_group', groupid ?? '');
     data.searchParams.append('id_user', newUser.toString());
-
+  
     fetch(data, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     })
-      .then(response => response.json())
-      .then(data => {
-        window.location.reload();
-        console.log("User added to group:", data);
-      })
-      .catch(error => console.error('Error fetching user list:', error));
+    .then(response => response.json())
+    .then(data => {
+      console.log("User added to group:", data);
+      const newUserObject = totalUsers.find(user => user.id_user === newUser);
+      
+      if (newUserObject) {
+        setGroupUsers([...groupUsers, { ...newUserObject}]);
+        setDebts([...debts, {id_user: newUserObject.id_user ,amount: 0}])
+      }
+      
+      setMemberName('');
+      setErrorMemberName('');
+      setIsModalOpen(false);
+    })
+    .catch(error => console.error('Error adding user to group:', error));
+  };
 
-    const newMember = {
-      id_user: newUser,
-      name: memberName,
-      debts: { 'ARG': 0, 'USD': 0 },
-    };
-    setGroupMembers([...groupMembers, newMember]);
-    setMemberName('');
-    setErrorMemberName('');
-    setIsModalOpen(false);
-  }
-
-  const handleDeleteGroupMember = (id_user: number) => {
+  const handleDeleteGroupUser = (id_user: number) => {
     const api = new URL(`${dbUrl}/groups/${groupid}/users`);
     api.searchParams.append('id_group', groupid ?? '');
     api.searchParams.append('id_user', id_user.toString());
@@ -257,6 +265,10 @@ const GroupPage = () => {
       })
       .catch(error => console.error('Error removing user from group:', error));
     setGroupUsers(groupUsers.filter(member => member.id_user !== id_user));
+    // setExpenses(expenses.filter(expense => expense.memberWhoPaid !== id_user).map(expense => {
+    //   expense.members = expense.members.filter(member => member !== id_user);
+    //   return expense;
+    // }));
   }
 
   useEffect(() => {
@@ -395,7 +407,7 @@ const GroupPage = () => {
       </div>
       <div className='grid grid-cols-12'>
         <div className='col-span-2'>
-          <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen}/>
+          <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen} handleDeleteGroupUser={handleDeleteGroupUser}/>
         </div>
         <div className='col-span-10 py-0'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
@@ -405,9 +417,12 @@ const GroupPage = () => {
           <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense}/>
         </div>
       </div>
-      {expenseModal === true && (
+      {/* {{expenseModal === true && (
         <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} addFunction={handleAddExpense}/>
-      )}
+      )} } */}
+      {expenseModal === true && (
+      <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses = {expenses} setExpenses={setExpenses}/>
+)}
 
     </main>
   );

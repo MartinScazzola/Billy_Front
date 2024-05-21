@@ -1,6 +1,7 @@
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import DeleteIcon from '@mui/icons-material/Delete';
 
-export default function NavigationLeft({ groupUsers, user, debts, modal}: any) {
+export default function NavigationLeft({ groupUsers, user, debts, modal, handleDeleteGroupUser}: any) {
 
     const handlerModal = () => {
         modal(true)
@@ -24,9 +25,18 @@ export default function NavigationLeft({ groupUsers, user, debts, modal}: any) {
                     {
                         groupUsers.map((member: { id_user: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
                             <div key={member.id_user} className='hover:bg-gray-200 rounded-r-2xl pl-1'>
-                                <svg aria-hidden="true" className=" inline flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path><path fill-rule="evenodd" d="M3 10a7 7 0 1114 0 7 7 0 01-14 0zm7-7a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                                <div className='inline'><span className="ml-3">{member.name}</span></div>
-                                <div><span>Deuda: ${debts.find((debt: any) => debt.id_user === member.id_user)?.amount || 0}</span></div>
+                                <div className='flex justify-between items-center'>
+                                    <div className='flex items-center'>
+                                        <svg aria-hidden="true" className="inline flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path><path fillRule="evenodd" d="M3 10a7 7 0 1114 0 7 7 0 01-14 0zm7-7a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1z" clipRule="evenodd"></path></svg>
+                                        <div className='inline'><span className="ml-3">{member.name}</span></div>
+                                    </div>
+                                    <button onClick={() => handleDeleteGroupUser(member.id_user)} className="text-gray-500 hover:text-gray-700 transition duration-200">
+                                        <DeleteIcon/>
+                                    </button>
+                                </div>
+                                <div className='ml-9'>
+                                    <span>Deuda: ${debts.find((debt: any) => debt.id_user === member.id_user)?.amount || 0}</span>
+                                </div>
                             </div>
                         ))
                     }
@@ -35,6 +45,5 @@ export default function NavigationLeft({ groupUsers, user, debts, modal}: any) {
 
             </div>
         </aside>
-
     )
 }
