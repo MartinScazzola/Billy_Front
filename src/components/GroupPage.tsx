@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CssVarsProvider, CssBaseline, Typography, Button, Box } from '@mui/joy';
+import { Typography, Button, Box } from '@mui/joy';
 import '../style_components/Home.css';
 
 import List from '@mui/joy/List';
 import ListSubheader from '@mui/joy/ListSubheader';
 import ListItem from '@mui/joy/ListItem';
-import Stack from '@mui/joy/Stack';
-
-import Divider from '@mui/joy/Divider';
-import Input from '@mui/joy/Input';
 import Select from '@mui/joy/Select';
 import Option from '@mui/joy/Option';
 
-import Layout from './Layout';
+
 import { dbUrl } from "../DBUrl";
-import ExpenseCard from './ExpenseCard';
-import Navigation from './Navigation';
 import ExpenseTable from './ExpenseTable';
 import { getAuth } from 'firebase/auth';
 import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
-import { set } from 'firebase/database';
+
 
 export type Expense = {
   id: number;
@@ -34,12 +28,6 @@ export type Expense = {
   members: number[];
   liquidated: boolean;
 };
-
-// type Member = {
-//   id_user: number;
-//   name: string;
-//   debts: { [key: string]: number };
-// };
 
 type Debts = {
   id_user: number;
@@ -56,6 +44,7 @@ type Group = {
   id_group: number;
   name: string;
 };
+
 
 const GroupPage = () => {
   const auth = getAuth(appFirebase);
@@ -279,7 +268,7 @@ const GroupPage = () => {
       .then(response => {
         if (response.status === 204) {
           console.log(`User ${id_user} removed from group ${groupid}`);
-          // Optionally update the state or perform other actions here
+          
         } else {
           console.error('Failed to remove user:', response.status);
         }
@@ -290,7 +279,6 @@ const GroupPage = () => {
     //   expense.members = expense.members.filter(member => member !== id_user);
     //   return expense;
     // }));
-  }
 
   useEffect(() => {
 

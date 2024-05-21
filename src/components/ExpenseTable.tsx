@@ -1,6 +1,7 @@
 import Button from '@mui/material/Button';
 import DoneIcon from '@mui/icons-material/Done';
 
+// ExpenseTable component
 export default function ClientsTable({ items, deleteFunction, liquidatedFunction }: any) {
     console.log("ITEMS -> ", items)
 

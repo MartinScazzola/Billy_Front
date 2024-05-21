@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   CssVarsProvider,
-  CssBaseline,
   Typography,
   Button,
   Box,
@@ -14,17 +13,14 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PersonIcon from "@mui/icons-material/Person";
 import FolderIcon from "@mui/icons-material/Folder";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PeopleIcon from "@mui/icons-material/People";
 import "../style_components/Home.css";
 import "../App.css";
 
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
-import ListItemButton from '@mui/joy/ListItemButton';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import DeleteIcon from '@mui/icons-material/Delete';
+
+
 
 // Definir el tipo para los grupos
 type Group = {
