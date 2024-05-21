@@ -50,13 +50,12 @@ const GroupPage = () => {
   const auth = getAuth(appFirebase);
   const user = auth.currentUser;
   const { groupid } = useParams();
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [debts, setDebts] = useState<Debts[]>([]);
 
   const [expenses, setExpenses] = useState<Expense[]>([]);
-  const [expenseName, setExpenseName] = useState('');
-  const [amount, setAmount] = useState(0);
-  const [memberWhoPaid, setMemberWhoPaid] = useState(0);
+  const [_expenseName, setExpenseName] = useState('');
+  const [_amount, setAmount] = useState(0);
+  const [_memberWhoPaid, setMemberWhoPaid] = useState(0);
   const [expenseModal, setExpenseModal] = useState(false);
 
   const [newUser, setNewUser] = useState(0);
@@ -65,35 +64,21 @@ const GroupPage = () => {
   const [totalUsers, setTotalUsers] = useState<User[]>([]);
 
   const [group, setGroup] = useState<Group>({ id_group: 0, name: 'USD' }); // or const [group, setGroup] = useState<Group | (() => Group)>({});
-  const [memberName, setMemberName] = useState('');
+  const [_memberName, setMemberName] = useState('');
   const [errorMemberName, setErrorMemberName] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setErrorMemberName('');
     setMemberName('');
   }
 
-  const [errorExpense, setErrorExpense] = useState('');
-  const [currency, setCurrency] = React.useState('ARG');
-
-  const handleExpenseNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setExpenseName(e.target.value);
-  const handleAmountChange = (e: { target: { value: any; }; }) => setAmount(Number(e.target.value));
+  const [_errorExpense, setErrorExpense] = useState('');
+  const [_currency, setCurrency] = React.useState('ARG');
 
   const closeExpenseModal = () => {
     setExpenseModal(false);
   };
-  const newExpenseModal = () => {
-    setExpenseModal(true);
-  };
-  
-  //Para el new expense modal
-  const handleAddExpenseToState = (newExpense: any) => {
-    setExpenses([...expenses, newExpense]);
-    updateDebts([...expenses, newExpense]);
-  };
-
 
   const updateDebts = (expenses: Expense[]) => {
     console.log("expenses", expenses)
@@ -109,11 +94,11 @@ const GroupPage = () => {
         console.log("id", id)
         const memberDebt = debts.find(debt => debt.id_user === id);
         if (id == expense.memberWhoPaid) {
-          if (memberDebt != undefined ){
+          if (memberDebt != undefined) {
             memberDebt.amount -= amountPerMember * (expense.members.length - 1);
           }
         } else {
-          if(memberDebt != undefined){
+          if (memberDebt != undefined) {
             memberDebt.amount += amountPerMember;
           }
         }
@@ -188,7 +173,7 @@ const GroupPage = () => {
 
     const expense_put = {
       id_expense: expense.id,
-      id_group: parseInt(groupid),
+      id_group: parseInt(groupid ?? ''),
       id_user: expense.memberWhoPaid,
       name: expense.name,
       amount: expense.amount,
@@ -229,32 +214,32 @@ const GroupPage = () => {
       setErrorMemberName('El nombre del miembro es requerido');
       return;
     }
-  
+
     const data = new URL(`${dbUrl}/groups/${groupid}/users`);
     data.searchParams.append('id_group', groupid ?? '');
     data.searchParams.append('id_user', newUser.toString());
-  
+
     fetch(data, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log("User added to group:", data);
-      const newUserObject = totalUsers.find(user => user.id_user === newUser);
-      
-      if (newUserObject) {
-        setGroupUsers([...groupUsers, { ...newUserObject}]);
-        setDebts([...debts, {id_user: newUserObject.id_user ,amount: 0}])
-      }
-      
-      setMemberName('');
-      setErrorMemberName('');
-      setIsModalOpen(false);
-    })
-    .catch(error => console.error('Error adding user to group:', error));
+      .then(response => response.json())
+      .then(data => {
+        console.log("User added to group:", data);
+        const newUserObject = totalUsers.find(user => user.id_user === newUser);
+
+        if (newUserObject) {
+          setGroupUsers([...groupUsers, { ...newUserObject }]);
+          setDebts([...debts, { id_user: newUserObject.id_user, amount: 0 }])
+        }
+
+        setMemberName('');
+        setErrorMemberName('');
+        setIsModalOpen(false);
+      })
+      .catch(error => console.error('Error adding user to group:', error));
   };
 
   const handleDeleteGroupUser = (id_user: number) => {
@@ -268,7 +253,7 @@ const GroupPage = () => {
       .then(response => {
         if (response.status === 204) {
           console.log(`User ${id_user} removed from group ${groupid}`);
-          
+
         } else {
           console.error('Failed to remove user:', response.status);
         }
@@ -279,6 +264,7 @@ const GroupPage = () => {
     //   expense.members = expense.members.filter(member => member !== id_user);
     //   return expense;
     // }));
+  }
 
   useEffect(() => {
 
@@ -334,7 +320,7 @@ const GroupPage = () => {
 
 
   return (
-    <main className='mt-10 mx-5'>
+    <aside className='mt-10 mx-5'>
       <div className='w-50 ml-64 h-40 bg-gradient-to-b from-blue-200 to-blue-400 flex items-center rounded-2xl shadow-2xl'>
         <h1 className="text-4xl ml-20 font-bold text-gray-800 leading-tight mb-2 border-b-2 border-gray-700 pb-2">
           {group.name}
@@ -417,21 +403,21 @@ const GroupPage = () => {
       </div>
       <div className='grid grid-cols-12'>
         <div className='col-span-1'>
-          <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen} handleDeleteGroupUser={handleDeleteGroupUser}/>
+          <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen} handleDeleteGroupUser={handleDeleteGroupUser} />
         </div>
         <div className='col-span-11 py-0 ml-[100px] flex flex-col justify-center items-center'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
             <p className='text-xl'>Gastos</p>
             <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
           </div>
-          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense}/>
+          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
         </div>
       </div>
       {expenseModal === true && (
-      <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses = {expenses} setExpenses={setExpenses} addFunction={handleAddExpense}/>
-)}
+        <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses={expenses} setExpenses={setExpenses} addFunction={handleAddExpense} />
+      )}
 
-    </main>
+    </aside>
   );
 }
 

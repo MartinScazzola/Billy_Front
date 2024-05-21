@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { dbUrl } from "../DBUrl";
 import { useParams } from "react-router-dom";
 
-export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, setExpenses, addFunction }: any) {
+export default function NewExpenseModal({ groupUsers, cancelFunction, addFunction }: any) {
     const { groupid } = useParams();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -79,8 +78,4 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, 
     );
 
 
-}
-
-function addExpenseToState(newExpense: { id: any; name: FormDataEntryValue | null; amount: FormDataEntryValue | null; currency: string; memberWhoPaid: FormDataEntryValue | null; memberWhoPaidName: any; members: any; }) {
-    throw new Error("Function not implemented.");
 }

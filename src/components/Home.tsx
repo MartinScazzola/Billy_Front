@@ -45,6 +45,7 @@ const Home = () => {
     setGroupName(""); // Limpiar el campo después de cerrar el modal
   };
 
+  /*
   const handleDeleteGroup = (group_id: number) => {
     console.log("group_id", group_id)
     fetch(`${dbUrl}/groups/${group_id}`, {
@@ -60,7 +61,7 @@ const Home = () => {
         console.error('Failed to remove user:', response.status);
       }
     });
-  };
+  };*/
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
