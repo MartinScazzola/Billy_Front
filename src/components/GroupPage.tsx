@@ -22,6 +22,7 @@ import { getAuth } from 'firebase/auth';
 import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
+import { set } from 'firebase/database';
 
 export type Expense = {
   id: number;
@@ -31,6 +32,7 @@ export type Expense = {
   memberWhoPaid: number;
   memberWhoPaidName: string;
   members: number[];
+  liquidated: boolean;
 };
 
 // type Member = {
@@ -109,6 +111,9 @@ const GroupPage = () => {
     const debts = groupUsers.map(user => ({ id_user: user.id_user, amount: 0 }));
     console.log('antes del for:', debts);
     expenses.forEach(expense => {
+      if (expense.liquidated) {
+        return;
+      }
       const amountPerMember = expense.amount / expense.members.length;
       console.log("members", expense.members)
       expense.members.forEach(id => {
@@ -129,46 +134,19 @@ const GroupPage = () => {
     console.log('Debts despues del for:', debts);
   }
 
-  const handleAddExpense = () => {
-    /*
-    if (expenseName.trim() === '') {
-      setErrorExpense('El nombre del gasto es requerido');
-      return;
-    }
-
-    if (memberWhoPaid === 0) {
-      setErrorExpense('El miembro que pagó el gasto es requerido');
-      return;
-    }
-
-    if (amount === 0) {
-      setErrorExpense('El monto del gasto es requerido y tiene que ser mayor a 0');
-      return;
-    }*/
-
-    const newExpense = {
-      id: 0,
-      name: expenseName,
-      amount: amount,
-      currency: currency,
-      memberWhoPaid: memberWhoPaid,
-      memberWhoPaidName: groupUsers.find(member => member.id_user === memberWhoPaid)?.name ?? '',
-      members: groupUsers.map(member => member.id_user),
-    };
-
-    setExpenses([...expenses, newExpense]);
-    updateDebts(expenses);
+  const handleAddExpense = (newExpense: Expense) => {
 
     console.log('expenses:', expenses);
 
     const expense_post = {
       id_expense: null,
       id_group: groupid,
-      id_user: memberWhoPaid,
-      name: expenseName,
-      amount: amount,
-      currency: currency,
-      participants: groupUsers.map(member => member.id_user),
+      id_user: newExpense.memberWhoPaid,
+      name: newExpense.name,
+      amount: newExpense.amount,
+      currency: newExpense.currency,
+      participants: newExpense.members,
+      liquidated: false
     }
 
     const data = new URL(`${dbUrl}/expenses`);
@@ -183,6 +161,8 @@ const GroupPage = () => {
       .then(response => response.json())
       .then(data => {
         console.log("User added to group:", data);
+        setExpenses([...expenses, newExpense]);
+        updateDebts(expenses);
       })
       .catch(error => console.error('Error fetching user list:', error));
 
@@ -211,6 +191,47 @@ const GroupPage = () => {
       })
       .catch(error => console.error('Error removing user from group:', error));
     setExpenses(expenses.filter(expense => expense.id !== id));
+  }
+
+  const handleLiquidateExpense = (expense: Expense) => {
+    // put expenses/{id}
+    const api = new URL(`${dbUrl}/expenses/${expense.id}`);
+
+    const expense_put = {
+      id_expense: expense.id,
+      id_group: parseInt(groupid),
+      id_user: expense.memberWhoPaid,
+      name: expense.name,
+      amount: expense.amount,
+      currency: expense.currency,
+      participants: expense.members,
+      liquidated: true
+    }
+
+    console.log('expense_put:', expense_put);
+
+    fetch(api, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(expense_put)
+    })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(`Expense ${expense.id} liquidated in group ${groupid}`);
+          setExpenses(expenses.map(exp => {
+            if (exp.id === expense.id) {
+              exp.liquidated = true;
+            }
+            return exp;
+          }));
+          updateDebts(expenses);
+        } else {
+          console.error('Failed to liquidate expense:', response.status);
+        }
+      })
+      .catch(error => console.error('Error liquidating expense from group:', error));
   }
 
   const handleAddGroupMember = () => {
@@ -313,6 +334,7 @@ const GroupPage = () => {
             memberWhoPaid: expense.id_user,
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense.id_user)?.name ?? '',
             members: expense.participants,
+            liquidated: expense.liquidated
           }
         })
         setExpenses(maped);
@@ -409,19 +431,16 @@ const GroupPage = () => {
         <div className='col-span-2'>
           <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen} handleDeleteGroupUser={handleDeleteGroupUser}/>
         </div>
-        <div className='col-span-10 py-0'>
+        <div className='col-span-10 py-0 flex flex-col justify-center items-center'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
             <p className='text-xl'>Gastos</p>
             <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
           </div>
-          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense}/>
+          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense}/>
         </div>
       </div>
-      {/* {{expenseModal === true && (
-        <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} addFunction={handleAddExpense}/>
-      )} } */}
       {expenseModal === true && (
-      <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses = {expenses} setExpenses={setExpenses}/>
+      <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses = {expenses} setExpenses={setExpenses} addFunction={handleAddExpense}/>
 )}
 
     </main>

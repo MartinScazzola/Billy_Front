@@ -2,7 +2,7 @@ import { useState } from "react";
 import { dbUrl } from "../DBUrl";
 import { useParams } from "react-router-dom";
 
-export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, setExpenses }: any) {
+export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, setExpenses, addFunction }: any) {
     const { groupid } = useParams();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,9 +40,11 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, expenses, 
                     memberWhoPaid: expense_post.id_user,
                     memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense_post.id_user)?.name ?? '',
                     members: expense_post.participants,
+                    liquidated: false
                 };
                 //addExpenseToState(newExpense);
-                setExpenses([...expenses, newExpense])
+                //setExpenses([...expenses, newExpense])
+                addFunction(newExpense);
                 cancelFunction();
             })
             .catch(error => console.error('Error adding expense:', error));
