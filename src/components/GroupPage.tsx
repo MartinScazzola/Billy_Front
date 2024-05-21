@@ -428,10 +428,10 @@ const GroupPage = () => {
         )}
       </div>
       <div className='grid grid-cols-12'>
-        <div className='col-span-2'>
+        <div className='col-span-1'>
           <NavigationLeft groupUsers={groupUsers} user={user} debts={debts} modal={setIsModalOpen} handleDeleteGroupUser={handleDeleteGroupUser}/>
         </div>
-        <div className='col-span-10 py-0 flex flex-col justify-center items-center'>
+        <div className='col-span-11 py-0 ml-[100px] flex flex-col justify-center items-center'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
             <p className='text-xl'>Gastos</p>
             <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
