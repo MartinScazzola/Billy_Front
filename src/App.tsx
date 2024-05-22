@@ -4,6 +4,7 @@ import Signup from './components/Signup';
 import Home from './components/Home';
 import GroupPage from './components/GroupPage';
 
+// App component
 const App = () => {
   return (
     <Routes>

@@ -2,27 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   CssVarsProvider,
-  CssBaseline,
   Typography,
   Button,
   Box,
   Menu,
   MenuItem,
-  IconButton,
 } from "@mui/joy";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PersonIcon from "@mui/icons-material/Person";
 import FolderIcon from "@mui/icons-material/Folder";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import PeopleIcon from "@mui/icons-material/People";
 import "../style_components/Home.css";
+import "../App.css";
+
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
-import ListItemButton from '@mui/joy/ListItemButton';
-import ListItemDecorator from '@mui/joy/ListItemDecorator';
-import DeleteIcon from '@mui/icons-material/Delete';
+
+
 
 // Definir el tipo para los grupos
 type Group = {
@@ -47,6 +44,7 @@ const Home = () => {
     setGroupName(""); // Limpiar el campo después de cerrar el modal
   };
 
+  /*
   const handleDeleteGroup = (group_id: number) => {
     console.log("group_id", group_id)
     fetch(`${dbUrl}/groups/${group_id}`, {
@@ -60,8 +58,9 @@ const Home = () => {
         setGroups(groups.filter((group) => group.id_group !== group_id));
       } else {
         console.error('Failed to remove user:', response.status);
-    }});
-  };
+      }
+    });
+  };*/
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
@@ -69,9 +68,9 @@ const Home = () => {
   useEffect(() => {
     fetch(
       `${dbUrl}/userid?` +
-        new URLSearchParams({
-          email: auth?.currentUser?.email ?? "",
-        }),
+      new URLSearchParams({
+        email: auth?.currentUser?.email ?? "",
+      }),
       {
         method: "GET",
         headers: {
@@ -95,7 +94,6 @@ const Home = () => {
                   id_group: group.id_group,
                   name: group.name,
                   members: [auth?.currentUser?.email ?? ""],
-                  memberCount: 1,
                 };
               })
             )
@@ -105,13 +103,12 @@ const Home = () => {
 
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
-      
-      console.log("groupname", groupName)
+
       fetch(
         `${dbUrl}/userid?` +
-          new URLSearchParams({
-            email: auth?.currentUser?.email ?? "",
-          }),
+        new URLSearchParams({
+          email: auth?.currentUser?.email ?? "",
+        }),
         {
           method: "GET",
           headers: {
@@ -119,30 +116,28 @@ const Home = () => {
           },
         }
       ).then((response) => response.json())
-      .then((data_user) => {
-        console.log("data_user", data_user)
-        fetch(`${dbUrl}/groups`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_group: null,
-            name: groupName,
-            participants: [data_user.id_user],
-          }),
-        }).then((response) => response.json())
-          .then((data) => {
-            console.log("data_group", data)
-            const newGroup = {
-              id_group: data.id_group,
-              name: data.name,
-              members: [auth?.currentUser?.email ?? ""],
-              memberCount: 1,
-            };
-            setGroups([...groups, newGroup]);
-            handleCloseModal();
-          });
+        .then((data_user) => {
+          fetch(`${dbUrl}/groups`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              id_group: null,
+              name: groupName,
+              participants: [data_user.id_user],
+            }),
+          }).then((response) => response.json())
+            .then((data) => {
+              const newGroup = {
+                id_group: data.id_group,
+                name: data.name,
+                members: [auth?.currentUser?.email ?? ""],
+                memberCount: 1,
+              };
+              setGroups([...groups, newGroup]);
+              handleCloseModal();
+            });
         });
     }
   };
@@ -175,7 +170,6 @@ const Home = () => {
     auth
       .signOut()
       .then(() => {
-        console.log("Sesión cerrada exitosamente.");
         navigate("/billy/login");
       })
       .catch((error) => {
@@ -192,7 +186,6 @@ const Home = () => {
 
   return (
     <CssVarsProvider>
-      <CssBaseline />
       <Box
         sx={{
           display: "flex",
@@ -212,29 +205,30 @@ const Home = () => {
         >
           <Button
             onClick={handleOpenModal}
-            startDecorator={<GroupAddIcon />}
-            sx={{ mb: 2 }}
-            variant="solid"
-            color="primary"
+            startDecorator={<GroupAddIcon/>}
+            sx={{ mb: 2, color: "black"}}
+            variant="outlined"
           >
             Crear nuevo grupo
           </Button>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
+          <Box sx={{ display: "flex", alignItems: "center"}}>
+            <Button
               onClick={handleNotifMenuOpen}
-              sx={{ border: "1px solid grey", mr: 1 }}
+              sx={{ border: "1px solid grey", mr: 1, color: "#555555"}}
+              variant="outlined"
             >
               <NotificationsIcon />
-            </IconButton>
-            <IconButton
+            </Button>
+            <Button
               onClick={handleMenuOpen}
-              sx={{ border: "1px solid grey" }}
+              sx={{ border: "1px solid grey", color: "#555555" }}
+              variant="outlined"
             >
               <PersonIcon />
-              <Typography sx={{ ml: 1 }}>
+              <Typography sx={{ ml: 1, color: "#555555" }}>
                 {auth?.currentUser?.email ?? "Usuario"}
               </Typography>
-            </IconButton>
+            </Button>
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -264,18 +258,10 @@ const Home = () => {
           }}
         >
           <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
+            <thead >
               <tr>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <FolderIcon /> Nombre del Grupo
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <AdminPanelSettingsIcon /> Administrador
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
-                  <PeopleIcon /> Cantidad de miembros
-                </th>
-                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }}>
+                <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }} >
+                  <FolderIcon className="bg-black"/> Nombre del Grupo
                 </th>
               </tr>
             </thead>
@@ -287,20 +273,12 @@ const Home = () => {
                       {group.name}
                     </Link>
                   </td>
-                  <td style={{ padding: "8px" }}>{group.members.join(", ")}</td>
-                  <td style={{ padding: "8px" }}>{group.memberCount}</td>
-                  <td style={{ padding: "8px" }}>
-                    <ListItemButton onClick={() => handleDeleteGroup(group.id_group)}>
-                      <ListItemDecorator>
-                        <DeleteIcon/>
-                      </ListItemDecorator>
-                    </ListItemButton>
-                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </Box>
+
         {isModalOpen && (
           <Box
             sx={{
@@ -314,12 +292,12 @@ const Home = () => {
           >
             <Box
               sx={{
-                bgcolor: "background.paper",
+                bgcolor: "#aaa",
                 p: 3,
                 borderRadius: "16px",
                 boxShadow: 6,
                 minWidth: "300px",
-                border: "1px solid grey", // Agregar borde gris alrededor del modal
+                border: "2px solid #333333",
               }}
             >
               <Typography level="h3" sx={{ mb: 1 }}>
@@ -353,9 +331,9 @@ const Home = () => {
 export default Home;
 
 
-                  {/* <ListItemButton>
+{/* <ListItemButton>
                   <ListItemDecorator>
                     <DeleteIcon/>
                   </ListItemDecorator>
                   </ListItemButton> */}
-                  {/* <td style={{ padding: "8px" }}>{group.id_group}</td> */}
+{/* <td style={{ padding: "8px" }}>{group.id_group}</td> */ }
