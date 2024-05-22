@@ -81,17 +81,13 @@ const GroupPage = () => {
   };
 
   const updateDebts = (expenses: Expense[]) => {
-    console.log("expenses", expenses)
     const debts = groupUsers.map(user => ({ id_user: user.id_user, amount: 0 }));
-    console.log('antes del for:', debts);
     expenses.forEach(expense => {
       if (expense.liquidated) {
         return;
       }
       const amountPerMember = expense.amount / expense.members.length;
-      console.log("members", expense.members)
       expense.members.forEach(id => {
-        console.log("id", id)
         const memberDebt = debts.find(debt => debt.id_user === id);
         if (id == expense.memberWhoPaid) {
           if (memberDebt != undefined) {
@@ -105,12 +101,9 @@ const GroupPage = () => {
       });
     })
     setDebts(debts);
-    console.log('Debts despues del for:', debts);
   }
 
   const handleAddExpense = (newExpense: Expense) => {
-
-    console.log('expenses:', expenses);
 
     const expense_post = {
       id_expense: null,
@@ -133,8 +126,7 @@ const GroupPage = () => {
       body: JSON.stringify(expense_post)
     })
       .then(response => response.json())
-      .then(data => {
-        console.log("User added to group:", data);
+      .then(_data => {
         setExpenses([...expenses, newExpense]);
         updateDebts(expenses);
       })
@@ -148,7 +140,6 @@ const GroupPage = () => {
   };
 
   const handleDeleteExpense = (id: number) => {
-    console.log('handleDeleteExpense - ', id);
     const api = new URL(`${dbUrl}/expenses/${id}`);
 
     fetch(api, {
@@ -181,9 +172,6 @@ const GroupPage = () => {
       participants: expense.members,
       liquidated: true
     }
-
-    console.log('expense_put:', expense_put);
-
     fetch(api, {
       method: 'PUT',
       headers: {
@@ -209,7 +197,6 @@ const GroupPage = () => {
   }
 
   const handleAddGroupMember = () => {
-    console.log('handleAddGroupMember', newUser);
     if (newUser === 0) {
       setErrorMemberName('El nombre del miembro es requerido');
       return;
@@ -268,11 +255,9 @@ const GroupPage = () => {
 
   useEffect(() => {
 
-    console.log('useEffect');
     fetch(`${dbUrl}/groups/${groupid}/users`)
       .then(response => response.json())
       .then(data => {
-        console.log("User list:", data);
         setGroupUsers(data);
       })
       .catch(error => console.error('Error fetching group:', error));
@@ -281,7 +266,6 @@ const GroupPage = () => {
     fetch(`${dbUrl}/groups/${groupid}`)
       .then(response => response.json())
       .then(data => {
-        console.log("User list:", data);
         setGroup(data);
       })
       .catch(error => console.error('Error fetching groups list:', error));
@@ -289,7 +273,6 @@ const GroupPage = () => {
     fetch(`${dbUrl}/users`)
       .then(response => response.json())
       .then(data => {
-        console.log("Total users list:", data);
         setTotalUsers(data);
       })
       .catch(error => console.error('Error fetching user list:', error));
@@ -297,7 +280,6 @@ const GroupPage = () => {
     fetch(`${dbUrl}/expenses`)
       .then(response => response.json())
       .then(data => {
-        console.log("Total expenses list:", data);
         const filtered = data.filter((expense: any) => expense.id_group == groupid);
         const maped = filtered.map((expense: any) => {
           return {

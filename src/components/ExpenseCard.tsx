@@ -22,7 +22,6 @@ export default function ExpenseCard({ expense, index, delete2 } : any) {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleExpandClick = () => {
-      console.log("expense - ", expense);
       setIsExpanded(!isExpanded);
   };
 

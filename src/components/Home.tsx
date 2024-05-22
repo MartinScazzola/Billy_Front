@@ -7,7 +7,6 @@ import {
   Box,
   Menu,
   MenuItem,
-  IconButton,
 } from "@mui/joy";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -105,7 +104,6 @@ const Home = () => {
   const handleCreateGroup = () => {
     if (groupName.trim() !== "") {
 
-      console.log("groupname", groupName)
       fetch(
         `${dbUrl}/userid?` +
         new URLSearchParams({
@@ -119,7 +117,6 @@ const Home = () => {
         }
       ).then((response) => response.json())
         .then((data_user) => {
-          console.log("data_user", data_user)
           fetch(`${dbUrl}/groups`, {
             method: "POST",
             headers: {
@@ -132,7 +129,6 @@ const Home = () => {
             }),
           }).then((response) => response.json())
             .then((data) => {
-              console.log("data_group", data)
               const newGroup = {
                 id_group: data.id_group,
                 name: data.name,
@@ -174,7 +170,6 @@ const Home = () => {
     auth
       .signOut()
       .then(() => {
-        console.log("Sesión cerrada exitosamente.");
         navigate("/billy/login");
       })
       .catch((error) => {
@@ -211,28 +206,29 @@ const Home = () => {
           <Button
             onClick={handleOpenModal}
             startDecorator={<GroupAddIcon/>}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, color: "black"}}
             variant="outlined"
-            color="primary"
           >
             Crear nuevo grupo
           </Button>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
+          <Box sx={{ display: "flex", alignItems: "center"}}>
+            <Button
               onClick={handleNotifMenuOpen}
-              sx={{ border: "1px solid grey", mr: 1 }}
+              sx={{ border: "1px solid grey", mr: 1, color: "#555555"}}
+              variant="outlined"
             >
               <NotificationsIcon />
-            </IconButton>
-            <IconButton
+            </Button>
+            <Button
               onClick={handleMenuOpen}
-              sx={{ border: "1px solid grey" }}
+              sx={{ border: "1px solid grey", color: "#555555" }}
+              variant="outlined"
             >
               <PersonIcon />
-              <Typography sx={{ ml: 1 }}>
+              <Typography sx={{ ml: 1, color: "#555555" }}>
                 {auth?.currentUser?.email ?? "Usuario"}
               </Typography>
-            </IconButton>
+            </Button>
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
@@ -296,12 +292,12 @@ const Home = () => {
           >
             <Box
               sx={{
-                bgcolor: "background.paper",
+                bgcolor: "#aaa",
                 p: 3,
                 borderRadius: "16px",
                 boxShadow: 6,
                 minWidth: "300px",
-                border: "1px solid grey", // Agregar borde gris alrededor del modal
+                border: "2px solid #333333",
               }}
             >
               <Typography level="h3" sx={{ mb: 1 }}>
