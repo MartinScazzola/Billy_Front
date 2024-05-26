@@ -1,8 +1,22 @@
 import { dbUrl } from "../DBUrl";
+import { useState } from 'react';
 import { useParams } from "react-router-dom";
+import { Tabs, Tab, TextField, } from '@mui/material';
 
 export default function NewExpenseModal({ groupUsers, cancelFunction, addFunction }: any) {
     const { groupid } = useParams();
+    const [tabValue, setTabValue] = useState(0);
+    const [percentages, setPercentages] = useState(groupUsers.map(() => 0));
+    
+    const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        setTabValue(newValue);
+    };
+
+    const handlePercentageChange = (index: number, value: number) => {
+        const newPercentages = [...percentages];
+        newPercentages[index] = value;
+        setPercentages(newPercentages);
+    };
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -67,15 +81,35 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
                                 ))
                             }
                         </select>
+                        <Tabs value={tabValue} onChange={handleTabChange} aria-label="expense division method" textColor="#CFBC9C" >
+                            <Tab label="Equal Parts" />
+                            <Tab label="Percentages" />
+                        </Tabs>
+                        {tabValue === 1 && (
+                            <div className='w-full'>
+                                {groupUsers.map((member: any, index: number) => (
+                                    <div key={member.id_user} className='flex items-center my-2'>
+                                        <TextField
+                                            label={member.name}
+                                            type="number"
+                                            value={percentages[index]}
+                                            onChange={(e) => handlePercentageChange(index, parseFloat(e.target.value))}
+                                            variant="outlined"
+                                            fullWidth
+                                            inputProps={{ min: 0, max: 100 }}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         <div className='flex no-wrap justify-center items-center gap-4'>
                             <button className="w-[8rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] text-sm transition duration-500 font-bold ">Enviar</button>
                             <button className="w-[6rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-sm text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] transition duration-500 font-bold" onClick={cancelFunction}>Cancelar</button>
                         </div>
                     </div>
+
                 </form>
             </div>
         </div>
     );
-
-
 }

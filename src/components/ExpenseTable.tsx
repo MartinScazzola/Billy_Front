@@ -1,8 +1,20 @@
 import Button from '@mui/material/Button';
 import DoneIcon from '@mui/icons-material/Done';
 
+
+// export type Expense = {
+//     id: number;
+//     name: string;
+//     amount: number;
+//     currency: string;
+//     memberWhoPaid: number;
+//     memberWhoPaidName: string;
+//     members: number[];
+//     liquidated: boolean;
+//   };
+
 // ExpenseTable component
-export default function ClientsTable({ items, deleteFunction, liquidatedFunction }: any) {
+export default function ClientsTable({expenses, deleteFunction, liquidatedFunction }: any) {
     return (
         <table className="table mt-0">
             <thead>
@@ -16,28 +28,28 @@ export default function ClientsTable({ items, deleteFunction, liquidatedFunction
             </thead>
             <tbody>
                 {
-                    items.map((item: any, index: number) => (
+                    expenses.map((expense: any, index: number) => (
                         <tr key={index}>
-                            <td>{item.name}</td>
-                            <td>{item.memberWhoPaidName}</td>
-                            <td>${item.amount} {item.currency}</td>
-                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(item.id)}>Eliminar Gasto</button></td>
+                            <td>{expense.name}</td>
+                            <td>{expense.memberWhoPaidName}</td>
+                            <td>${expense.amount} {expense.currency}</td>
+                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>Eliminar Gasto</button></td>
                             <td>
                                 <Button
                                     variant="contained"
-                                    color={item.liquidated ? "success" : "primary"}
-                                    onClick={() => liquidatedFunction(item)}
-                                    disabled={item.liquidated}
+                                    color={expense.liquidated ? "success" : "primary"}
+                                    onClick={() => liquidatedFunction(expense)}
+                                    disabled={expense.liquidated}
                                     startIcon={<DoneIcon />}
                                     sx={{
                                         transition: 'background-color 0.3s',
-                                        backgroundColor: item.liquidated ? 'green' : 'grey',
+                                        backgroundColor: expense.liquidated ? 'green' : 'grey',
                                         '&:hover': {
-                                            backgroundColor: item.liquidated ? 'darkgreen' : 'darkgrey',
+                                            backgroundColor: expense.liquidated ? 'darkgreen' : 'darkgrey',
                                         },
                                     }}
                                 >
-                                    {item.liquidated ? 'Liquidado' : 'Liquidar'}
+                                    {expense.liquidated ? 'Liquidado' : 'Liquidar'}
                                 </Button>
                             </td>
                         </tr>

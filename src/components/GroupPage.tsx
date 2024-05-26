@@ -17,7 +17,6 @@ import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
 
-
 export type Expense = {
   id: number;
   name: string;
@@ -392,12 +391,13 @@ const GroupPage = () => {
             <p className='text-xl'>Gastos</p>
             <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
           </div>
-          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
+          <ExpenseTable expenses={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
         </div>
       </div>
       {expenseModal === true && (
         <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses={expenses} setExpenses={setExpenses} addFunction={handleAddExpense} />
       )}
+
 
     </aside>
   );
