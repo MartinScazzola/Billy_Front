@@ -17,6 +17,7 @@ import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from './languageSelector';
 
 export type Expense = {
   id: number;
@@ -309,6 +310,7 @@ const GroupPage = () => {
         <h1 className="text-4xl ml-20 font-bold text-gray-800 leading-tight mb-2 border-b-2 border-gray-700 pb-2">
           {group.name}
         </h1>
+        <LanguageSelector />
       </div>
       <div>
 
