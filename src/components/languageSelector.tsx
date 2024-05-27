@@ -1,5 +1,4 @@
 import { Box, Button } from '@mui/joy';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const LanguageSelector = () => {

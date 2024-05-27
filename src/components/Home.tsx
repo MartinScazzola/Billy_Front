@@ -247,7 +247,7 @@ const Home = () => {
             >
               <MenuItem>{t('Notificación 1')}</MenuItem>
               <MenuItem>{t('Notificación 2')}</MenuItem>
-              <MenuItem>{t('Notificación 3')}'</MenuItem>
+              <MenuItem>{t('Notificación 3')}</MenuItem>
             </Menu>
           </Box>
         </Box>

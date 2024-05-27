@@ -310,7 +310,6 @@ const GroupPage = () => {
         <h1 className="text-4xl ml-20 font-bold text-gray-800 leading-tight mb-2 border-b-2 border-gray-700 pb-2">
           {group.name}
         </h1>
-        <LanguageSelector />
       </div>
       <div>
 
