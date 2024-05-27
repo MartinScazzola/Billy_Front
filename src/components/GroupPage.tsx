@@ -26,6 +26,7 @@ export type Expense = {
   memberWhoPaidName: string;
   members: number[];
   liquidated: boolean;
+  expense_distribution: number[];
 };
 
 type Debts = {
@@ -86,15 +87,18 @@ const GroupPage = () => {
         return;
       }
       const amountPerMember = expense.amount / expense.members.length;
-      expense.members.forEach(id => {
+      expense.members.forEach((id, index) => {
         const memberDebt = debts.find(debt => debt.id_user === id);
         if (id == expense.memberWhoPaid) {
           if (memberDebt != undefined) {
-            memberDebt.amount -= amountPerMember * (expense.members.length - 1);
+            console.log(expense)
+            //memberDebt.amount -= amountPerMember * (expense.members.length - 1);
+            memberDebt.amount -= (expense.amount - expense.expense_distribution[index]);
           }
         } else {
           if (memberDebt != undefined) {
-            memberDebt.amount += amountPerMember;
+            //memberDebt.amount += amountPerMember;
+            memberDebt.amount += expense.expense_distribution[index];
           }
         }
       });
@@ -102,7 +106,8 @@ const GroupPage = () => {
     setDebts(debts);
   }
 
-  const handleAddExpense = (newExpense: Expense, percentages: any) => {
+  const handleAddExpense = (newExpense: Expense) => {
+    console.log("Adding expense", newExpense)
     const expense_post = {
       id_expense: null,
       id_group: groupid,
@@ -112,7 +117,7 @@ const GroupPage = () => {
       currency: newExpense.currency,
       participants: newExpense.members,
       liquidated: false,
-      expense_distribution: percentages.map(percentages => Math.trunc(newExpense.amount * percentages / 100))
+      expense_distribution: newExpense.expense_distribution
     }
 
     const data = new URL(`${dbUrl}/expenses`);
@@ -170,7 +175,7 @@ const GroupPage = () => {
       currency: expense.currency,
       participants: expense.members,
       liquidated: true,
-      expense_distribution: expense.members.map(_member => expense.amount / expense.members.length)
+      expense_distribution: expense.expense_distribution
     }
     fetch(api, {
       method: 'PUT',
@@ -290,7 +295,8 @@ const GroupPage = () => {
             memberWhoPaid: expense.id_user,
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense.id_user)?.name ?? '',
             members: expense.participants,
-            liquidated: expense.liquidated
+            liquidated: expense.liquidated,
+            expense_distribution: expense.expense_distribution
           }
         })
         setExpenses(maped);

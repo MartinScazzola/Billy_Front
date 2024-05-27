@@ -24,15 +24,6 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        // const expense_post = {
-        //     id_expense: null,
-        //     id_group: groupid,
-        //     id_user: formData.get('memberWhoPaid'),
-        //     name: formData.get('expenseName'),
-        //     amount: formData.get('amount'),
-        //     currency: 'ARS',
-        //     participants: groupUsers.map((member: { id_user: any; }) => member.id_user),
-        // }
         const newExpense = {
             id: null,
             name: formData.get('expenseName'),
@@ -41,38 +32,10 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
             memberWhoPaid: formData.get('memberWhoPaid'),
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === formData.get('memberWhoPaid'))?.name ?? '',
             members: groupUsers.map((member: { id_user: any; }) => member.id_user),
-            liquidated: false
+            liquidated: false,
+            expense_distribution: percentages.map((percentage: number) => percentage * parseFloat(formData.get('amount') as string) / 100)
         };
 
-        //const data = new URL(`${dbUrl}/expenses`);
-        
-        // fetch(data, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(expense_post)
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         const newExpense = {
-        //             id: data.id_expense,
-        //             name: expense_post.name,
-        //             amount: expense_post.amount,
-        //             currency: expense_post.currency,
-        //             memberWhoPaid: expense_post.id_user,
-        //             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense_post.id_user)?.name ?? '',
-        //             members: expense_post.participants,
-        //             liquidated: false
-        //         };
-        //         //addExpenseToState(newExpense);
-        //         //setExpenses([...expenses, newExpense])
-        //         addFunction(newExpense, expense_post.expense_distribution);
-        //         cancelFunction();
-        //     })
-        //     .catch(error => console.error('Error adding expense:', error));
-//        addExpenseToState(newExpense);
-//        setExpenses([...expenses, newExpense])
         addFunction(newExpense, percentages);
         cancelFunction();
     };
