@@ -102,8 +102,7 @@ const GroupPage = () => {
     setDebts(debts);
   }
 
-  const handleAddExpense = (newExpense: Expense) => {
-
+  const handleAddExpense = (newExpense: Expense, percentages: any) => {
     const expense_post = {
       id_expense: null,
       id_group: groupid,
@@ -112,7 +111,8 @@ const GroupPage = () => {
       amount: newExpense.amount,
       currency: newExpense.currency,
       participants: newExpense.members,
-      liquidated: false
+      liquidated: false,
+      expense_distribution: percentages.map(percentages => Math.trunc(newExpense.amount * percentages / 100))
     }
 
     const data = new URL(`${dbUrl}/expenses`);
@@ -169,7 +169,8 @@ const GroupPage = () => {
       amount: expense.amount,
       currency: expense.currency,
       participants: expense.members,
-      liquidated: true
+      liquidated: true,
+      expense_distribution: expense.members.map(_member => expense.amount / expense.members.length)
     }
     fetch(api, {
       method: 'PUT',
