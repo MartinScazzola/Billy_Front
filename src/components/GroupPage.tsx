@@ -17,7 +17,6 @@ import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
 import { useTranslation } from 'react-i18next';
-import LanguageSelector from './languageSelector';
 
 export type Expense = {
   id: number;
