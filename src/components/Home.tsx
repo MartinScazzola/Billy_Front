@@ -18,6 +18,8 @@ import "../App.css";
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
+import { useTranslation } from "react-i18next";
+import LanguageSelector from "./languageSelector";
 
 
 
@@ -31,6 +33,7 @@ type Group = {
 const auth = getAuth(appFirebase);
 
 const Home = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
@@ -209,9 +212,10 @@ const Home = () => {
             sx={{ mb: 2, color: "black"}}
             variant="outlined"
           >
-            Crear nuevo grupo
+            {t('Crear nuevo grupo')}
           </Button>
           <Box sx={{ display: "flex", alignItems: "center"}}>
+            <LanguageSelector />
             <Button
               onClick={handleNotifMenuOpen}
               sx={{ border: "1px solid grey", mr: 1, color: "#555555"}}
@@ -234,16 +238,16 @@ const Home = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleSignOut}>Cerrar sesión</MenuItem>
+              <MenuItem onClick={handleSignOut}>{t('Cerrar sesión')}</MenuItem>
             </Menu>
             <Menu
               anchorEl={notifAnchorEl}
               open={Boolean(notifAnchorEl)}
               onClose={handleNotifMenuClose}
             >
-              <MenuItem>Notificación 1</MenuItem>
-              <MenuItem>Notificación 2</MenuItem>
-              <MenuItem>Notificación 3</MenuItem>
+              <MenuItem>{t('Notificación 1')}</MenuItem>
+              <MenuItem>{t('Notificación 2')}</MenuItem>
+              <MenuItem>{t('Notificación 3')}'</MenuItem>
             </Menu>
           </Box>
         </Box>
@@ -261,7 +265,7 @@ const Home = () => {
             <thead >
               <tr>
                 <th style={{ borderBottom: "1px solid #e0e0e0", padding: "8px" }} >
-                  <FolderIcon className="bg-black"/> Nombre del Grupo
+                  <FolderIcon className="bg-black"/> {t('Nombre del Grupo')}
                 </th>
               </tr>
             </thead>
@@ -301,7 +305,7 @@ const Home = () => {
               }}
             >
               <Typography level="h3" sx={{ mb: 1 }}>
-                Nuevo grupo
+                {t('Nuevo grupo')}
               </Typography>
               <input
                 type="text"
@@ -317,8 +321,8 @@ const Home = () => {
                 }}
               />
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Button onClick={handleCloseModal}>Cancelar</Button>
-                <Button onClick={handleCreateGroup}>Crear</Button>
+                <Button onClick={handleCloseModal}>{t('Cancelar')}</Button>
+                <Button onClick={handleCreateGroup}>{t('Crear')}</Button>
               </Box>
             </Box>
           </Box>

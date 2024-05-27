@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button';
 import DoneIcon from '@mui/icons-material/Done';
+import { useTranslation } from 'react-i18next';
 
 
 // export type Expense = {
@@ -15,13 +16,15 @@ import DoneIcon from '@mui/icons-material/Done';
 
 // ExpenseTable component
 export default function ClientsTable({expenses, deleteFunction, liquidatedFunction }: any) {
+
+    const { t } = useTranslation();
     return (
         <table className="table mt-0">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Pagado Por</th>
-                    <th>Monto</th>
+                    <th>{t('Nombre')}</th>
+                    <th>{t('Pagado Por')}</th>
+                    <th>{t('Monto')}</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -33,7 +36,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                             <td>{expense.name}</td>
                             <td>{expense.memberWhoPaidName}</td>
                             <td>${expense.amount} {expense.currency}</td>
-                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>Eliminar Gasto</button></td>
+                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
                             <td>
                                 <Button
                                     variant="contained"

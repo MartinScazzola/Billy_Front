@@ -1,7 +1,10 @@
 import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from "react-i18next";
 
 export default function NavigationLeft({ groupUsers, user, debts, modal, handleDeleteGroupUser }: any) {
+
+    const { t } = useTranslation();
 
     const handlerModal = () => {
         modal(true)
@@ -20,7 +23,7 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                 </ul>
                 <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700 text-gray-400">
                     <li>
-                        <span>Miembros del grupo</span>
+                        <span>{t('Miembros del grupo')}</span>
                     </li>
                     {
                         groupUsers.map((member: { id_user: Key | null | undefined; name: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }) => (
@@ -31,7 +34,7 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                                         <div className='flex flex-col items-start'>
                                             <div className=''><span className="">{member.name}</span></div>
                                             <div className=''>
-                                                <span>Deuda: ${debts.find((debt: any) => debt.id_user === member.id_user)?.amount || 0}</span>
+                                                <span>{t('Deuda')}: ${debts.find((debt: any) => debt.id_user === member.id_user)?.amount || 0}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -44,7 +47,7 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                             </div>
                         ))
                     }
-                    <button className='bg-green-400 p-2 rounded-xl text-white hover:bg-green-600 transition duration-300' onClick={handlerModal}>Agregar Persona</button>
+                    <button className='bg-green-400 p-2 rounded-xl text-white hover:bg-green-600 transition duration-300' onClick={handlerModal}>{t('Agregar Persona')}</button>
                 </ul>
 
             </div>
