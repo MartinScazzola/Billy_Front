@@ -27,6 +27,8 @@ export type Expense = {
   members: number[];
   liquidated: boolean;
   expense_distribution: number[];
+  date: string;
+  category: string;
 };
 
 type Debts = {
@@ -107,7 +109,9 @@ const GroupPage = () => {
   }
 
   const handleAddExpense = (newExpense: Expense) => {
-    console.log("Adding expense", newExpense)
+
+    console.log(newExpense)
+
     const expense_post = {
       id_expense: null,
       id_group: groupid,
@@ -117,7 +121,9 @@ const GroupPage = () => {
       currency: newExpense.currency,
       participants: newExpense.members,
       liquidated: false,
-      expense_distribution: newExpense.expense_distribution
+      expense_distribution: newExpense.expense_distribution,
+      date: newExpense.date,
+      category: newExpense.category,
     }
 
     const data = new URL(`${dbUrl}/expenses`);
@@ -175,7 +181,9 @@ const GroupPage = () => {
       currency: expense.currency,
       participants: expense.members,
       liquidated: true,
-      expense_distribution: expense.expense_distribution
+      expense_distribution: expense.expense_distribution,
+      category: expense.category,
+      date: expense.date
     }
     fetch(api, {
       method: 'PUT',
@@ -285,6 +293,7 @@ const GroupPage = () => {
     fetch(`${dbUrl}/expenses`)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const filtered = data.filter((expense: any) => expense.id_group == groupid);
         const maped = filtered.map((expense: any) => {
           return {
@@ -296,7 +305,9 @@ const GroupPage = () => {
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense.id_user)?.name ?? '',
             members: expense.participants,
             liquidated: expense.liquidated,
-            expense_distribution: expense.expense_distribution
+            expense_distribution: expense.expense_distribution,
+            category: expense.category,
+            date: expense.date
           }
         })
         setExpenses(maped);
