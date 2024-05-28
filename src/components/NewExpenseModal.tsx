@@ -26,15 +26,6 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        // const expense_post = {
-        //     id_expense: null,
-        //     id_group: groupid,
-        //     id_user: formData.get('memberWhoPaid'),
-        //     name: formData.get('expenseName'),
-        //     amount: formData.get('amount'),
-        //     currency: 'ARS',
-        //     participants: groupUsers.map((member: { id_user: any; }) => member.id_user),
-        // }
         const newExpense = {
             id: null,
             name: formData.get('expenseName'),
@@ -43,45 +34,19 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
             memberWhoPaid: formData.get('memberWhoPaid'),
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === formData.get('memberWhoPaid'))?.name ?? '',
             members: groupUsers.map((member: { id_user: any; }) => member.id_user),
-            liquidated: false
+            liquidated: false,
+            expense_distribution: percentages.map((percentage: number) => Math.trunc(percentage * parseInt(formData.get('amount') as string) / 100)),
+            date: formData.get('date')?.toString() ?? '',
+            category: formData.get('category'),
         };
 
-        //const data = new URL(`${dbUrl}/expenses`);
-        
-        // fetch(data, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify(expense_post)
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         const newExpense = {
-        //             id: data.id_expense,
-        //             name: expense_post.name,
-        //             amount: expense_post.amount,
-        //             currency: expense_post.currency,
-        //             memberWhoPaid: expense_post.id_user,
-        //             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense_post.id_user)?.name ?? '',
-        //             members: expense_post.participants,
-        //             liquidated: false
-        //         };
-        //         //addExpenseToState(newExpense);
-        //         //setExpenses([...expenses, newExpense])
-        //         addFunction(newExpense, expense_post.expense_distribution);
-        //         cancelFunction();
-        //     })
-        //     .catch(error => console.error('Error adding expense:', error));
-//        addExpenseToState(newExpense);
-//        setExpenses([...expenses, newExpense])
         addFunction(newExpense, percentages);
         cancelFunction();
     };
 
     return (
         <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-30'>
-            <div className="animationTest rounded-3xl bg-white w-96 h-96 flex flex-col justify-center items-center text-black shadow-2xl gap-5 ">
+            <div className="animationTest rounded-3xl bg-white w-[500px] h-[800px] flex flex-col justify-center items-center text-black shadow-2xl gap-5 ">
                 <p className="font-overlock text-[#CFBC9C] text-2xl font-black">{t('Nuevo Pago')}</p>
                 <form onSubmit={handleSubmit} method='post' name='contact-form'>
                     <div className='flex flex-col justify-content items-center gap-4'>
@@ -97,6 +62,19 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
                                 ))
                             }
                         </select>
+                        <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Categoria</label>
+                        <select id="category" name="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Selecciona una categoria</option>
+                            <option key="viaje" value="viaje">Viajes</option>
+                            <option key="alimentos" value="alimentos">Alimentos</option>
+                            <option key="educacion" value="educacion">Educacion</option>
+                            <option key="salud" value="salud">Salud</option>
+                            <option key="transporte" value="transporte">Transporte</option>
+                            <option key="general" value="general">Otros</option>
+                        </select>
+                        <label htmlFor="date" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha</label>
+                        <input type="date" name="date" id="date" className="w-[20rem] bg-[#fffefe] text-[#80958B] text-sm transition duration-700 border-b-2 outline-0"></input>
+
                         <Tabs value={tabValue} onChange={handleTabChange} aria-label="expense division method" textColor="#CFBC9C" >
                             <Tab label="Equal Parts" />
                             <Tab label="Percentages" />
