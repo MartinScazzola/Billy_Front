@@ -30,8 +30,12 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                                         <svg aria-hidden="true" className="inline flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10 12a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path><path fillRule="evenodd" d="M3 10a7 7 0 1114 0 7 7 0 01-14 0zm7-7a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1z" clipRule="evenodd"></path></svg>
                                         <div className='flex flex-col items-start'>
                                             <div className=''><span className="">{member.name}</span></div>
-                                            <div className=''>
-                                                <span>Deuda: ${debts.find((debt: any) => debt.id_user === member.id_user)?.amount || 0}</span>
+                                            <div className='flex flex-col items-start'>
+                                                <span>Deuda:</span>
+                                                {debts.map((debt: any) => debt.currency).filter((item: any,
+                                                    index: any, arr: any) => arr.indexOf(item) === index).map((currency: any) => {
+                                                        return <div>{currency}: ${debts.filter((debt: any) => debt.currency === currency && debt.id_user === member.id_user).map((debt: any) => debt.amount)}</div>;
+                                                    })}
                                             </div>
                                         </div>
                                     </div>

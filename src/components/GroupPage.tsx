@@ -34,6 +34,7 @@ export type Expense = {
 type Debts = {
   id_user: number;
   amount: number;
+  currency: string;
 }
 
 type User = {
@@ -83,14 +84,18 @@ const GroupPage = () => {
   };
 
   const updateDebts = (expenses: Expense[]) => {
-    const debts = groupUsers.map(user => ({ id_user: user.id_user, amount: 0 }));
+    const debts = groupUsers.map(user => {
+      return expenses.map((expense) => expense.currency).filter((item: any,
+        index: any, arr: any) => arr.indexOf(item) === index).map((currency) => ({ id_user: user.id_user, amount: 0, currency: currency }))
+    }
+    ).flat();
     expenses.forEach(expense => {
       if (expense.liquidated) {
         return;
       }
       const amountPerMember = expense.amount / expense.members.length;
       expense.members.forEach((id, index) => {
-        const memberDebt = debts.find(debt => debt.id_user === id);
+        const memberDebt = debts.find(debt => debt.id_user === id && debt.currency === expense.currency);
         if (id == expense.memberWhoPaid) {
           if (memberDebt != undefined) {
             console.log(expense)
@@ -232,7 +237,7 @@ const GroupPage = () => {
 
         if (newUserObject) {
           setGroupUsers([...groupUsers, { ...newUserObject }]);
-          setDebts([...debts, { id_user: newUserObject.id_user, amount: 0 }])
+          setDebts([...debts, { id_user: newUserObject.id_user, amount: 0, currency: 'ARS' }])
         }
 
         setMemberName('');

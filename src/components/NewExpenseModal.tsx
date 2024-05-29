@@ -8,6 +8,8 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
     const { groupid } = useParams();
     const [tabValue, setTabValue] = useState(0);
     const [percentages, setPercentages] = useState(groupUsers.map(() => 100/groupUsers.length));
+
+    const currencies = ['ARS', 'BRL', 'CLP', 'COP', 'EUR', 'PEN', 'USD'];
     
     const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setTabValue(newValue);
@@ -29,7 +31,7 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
             id: null,
             name: formData.get('expenseName'),
             amount: formData.get('amount'),
-            currency: 'ARS',
+            currency: formData.get('currency'),
             memberWhoPaid: formData.get('memberWhoPaid'),
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === formData.get('memberWhoPaid'))?.name ?? '',
             members: groupUsers.map((member: { id_user: any; }) => member.id_user),
@@ -51,6 +53,15 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
                     <div className='flex flex-col justify-content items-center gap-4'>
                         <input type="text" name="expenseName" id="expenseName" placeholder="Nombre del pago" className="w-[20rem] bg-[#fffefe] text-[#80958B] text-sm transition duration-700 border-b-2 outline-0"></input>
                         <input type="number" name="amount" id="amount" placeholder="Ingrese un Monto" className="w-[20rem] bg-[#fffefe] text-[#80958B] text-sm transition duration-700 border-b-2 outline-0"></input>
+                        <select id="currency" name="currency" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Elige una moneda</option>
+                            {
+
+                                currencies.map((currency: any) => (
+                                    <option key={currency} value={currency}>{currency}</option>
+                                ))
+                            }
+                        </select>
                         <label htmlFor="memberWhoPaid" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">¿Quién Pagó?</label>
                         <select id="memberWhoPaid" name="memberWhoPaid" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option selected>Elige a una persona</option>
