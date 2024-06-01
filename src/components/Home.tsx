@@ -10,6 +10,7 @@ import {
 } from "@mui/joy";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import HelpIcon from "@mui/icons-material/Help";
 import PersonIcon from "@mui/icons-material/Person";
 import FolderIcon from "@mui/icons-material/Folder";
 import "../style_components/Home.css";
@@ -18,7 +19,6 @@ import "../App.css";
 import { getAuth } from "firebase/auth";
 import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
-
 
 
 // Definir el tipo para los grupos
@@ -33,6 +33,7 @@ const auth = getAuth(appFirebase);
 const Home = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [groups, setGroups] = useState<Group[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para el menú desplegable del usuario
@@ -44,23 +45,8 @@ const Home = () => {
     setGroupName(""); // Limpiar el campo después de cerrar el modal
   };
 
-  /*
-  const handleDeleteGroup = (group_id: number) => {
-    console.log("group_id", group_id)
-    fetch(`${dbUrl}/groups/${group_id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      if (response.status === 204) {
-        console.log(`Group ${group_id} deleted`);
-        setGroups(groups.filter((group) => group.id_group !== group_id));
-      } else {
-        console.error('Failed to remove user:', response.status);
-      }
-    });
-  };*/
+  const handleHelpOpenModal = () => setIsHelpModalOpen(true);
+  const handleHelpCloseModal = () => setIsHelpModalOpen(false);
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
@@ -211,6 +197,14 @@ const Home = () => {
           >
             Crear nuevo grupo
           </Button>
+          <Button
+            onClick={handleHelpOpenModal}
+            startDecorator={<HelpIcon/>}
+            sx={{ mb: 2, color: "black"}}
+            variant="outlined"
+          >
+            Ayuda
+          </Button>
           <Box sx={{ display: "flex", alignItems: "center"}}>
             <Button
               onClick={handleNotifMenuOpen}
@@ -323,12 +317,87 @@ const Home = () => {
             </Box>
           </Box>
         )}
+
+        {isHelpModalOpen && (
+          <Box
+            sx={{
+              position: "fixed",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor: "#fff",
+                p: 3,
+                borderRadius: "16px",
+                boxShadow: 6,
+                minWidth: "300px",
+                border: "2px solid #333333",
+                color: "black"
+              }}
+            >
+              <Typography level="h3" sx={{ mb: 1 }}>
+                Ayuda
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                Bienvenido a la aplicación de control de gastos Billy. Aquí te mostramos cómo usar la página web:
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                1. Regístrate con tu nombre, apellido, correo electrónico y contraseña en la página de sign up.
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                2. Inicia sesión con tu correo electrónico y contraseña en la página de log in.
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                3. En la página de inicio, verás tus grupos y podrás crear un nuevo grupo haciendo click en el botón "crear nuevo grupo".
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                4. Dentro de un grupo, puedes añadir miembros haciendo click en el botón "agregar persona" o eliminar un miembro haciendo click en el ícono del cesto. Además, puedes agregar gastos haciendo click en el botón "agregar gasto".
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                5. Al añadir un gasto, podrás agregar su nombre, el precio (seleccionando la divisa correspondiente), miembro que lo pagó, categoría y cómo quiere ser divido entre los miembros del grupo.
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                6. La división de gastos puede ser en partes iguales o por porcentajes. Una vez añadido el gasto, las deudas se actualizarán entre los miembros del grupo automáticamente.
+              </Typography>
+              <Typography sx={{ mb: 1 }}>
+                7. Puedes liquidar los gastos haciendo click en el botón "liquidar gasto", y las deudas se actualizarán en consecuencia. Si has agregado un gasto erroneamente, puedes eliminarlo haciendo click en el botón "eliminar gasto". 
+              </Typography>
+              <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+                <Button onClick={handleHelpCloseModal}>Cerrar</Button>
+              </Box>
+            </Box>
+          </Box>
+        )}
       </Box>
     </CssVarsProvider>
   );
 };
 
 export default Home;
+
+
+  /*
+  const handleDeleteGroup = (group_id: number) => {
+    console.log("group_id", group_id)
+    fetch(`${dbUrl}/groups/${group_id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => {
+      if (response.status === 204) {
+        console.log(`Group ${group_id} deleted`);
+        setGroups(groups.filter((group) => group.id_group !== group_id));
+      } else {
+        console.error('Failed to remove user:', response.status);
+      }
+    });
+  };*/
 
 
 {/* <ListItemButton>
