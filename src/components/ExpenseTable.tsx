@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button';
 import DoneIcon from '@mui/icons-material/Done';
-import FlightIcon from '@mui/icons-material/Flight';
+import { useTranslation } from 'react-i18next';
 
 
 // export type Expense = {
@@ -16,6 +16,8 @@ import FlightIcon from '@mui/icons-material/Flight';
 
 // ExpenseTable component
 export default function ClientsTable({expenses, deleteFunction, liquidatedFunction }: any) {
+
+    const { t } = useTranslation();
     function capitalizeFirstLetter(string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -24,9 +26,9 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
             <thead>
                 <tr>
                     <th></th>
-                    <th>Nombre</th>
-                    <th>Pagado Por</th>
-                    <th>Monto</th>
+                    <th>{t('Nombre')}</th>
+                    <th>{t('Pagado Por')}</th>
+                    <th>{t('Monto')}</th>
                     <th>Categoria</th>
                     <th>Fecha</th>
                     <th></th>
@@ -45,7 +47,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                             <td>${expense.amount} {expense.currency}</td>
                             <td>{capitalizeFirstLetter(expense.category)}</td>
                             <td>{expense.date}</td>
-                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>Eliminar Gasto</button></td>
+                            <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
                             <td>
                                 <Button
                                     variant="contained"

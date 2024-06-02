@@ -2,9 +2,10 @@ import { dbUrl } from "../DBUrl";
 import { useState } from 'react';
 import { useParams } from "react-router-dom";
 import { Tabs, Tab, TextField, } from '@mui/material';
-import { Category } from "@mui/icons-material";
+import { useTranslation } from "react-i18next";
 
 export default function NewExpenseModal({ groupUsers, cancelFunction, addFunction }: any) {
+    const { t } = useTranslation();
     const { groupid } = useParams();
     const [tabValue, setTabValue] = useState(0);
     const [percentages, setPercentages] = useState(groupUsers.map(() => 100/groupUsers.length));
@@ -47,8 +48,8 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
 
     return (
         <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-30'>
-            <div className="animationTest rounded-3xl bg-white w-[500px] h-[800px] flex flex-col justify-center items-center text-black shadow-2xl gap-5">
-                <p className="font-overlock text-[#CFBC9C] text-2xl font-black">Nuevo Pago</p>
+            <div className="animationTest rounded-3xl bg-white w-[500px] h-[800px] flex flex-col justify-center items-center text-black shadow-2xl gap-5 ">
+                <p className="font-overlock text-[#CFBC9C] text-2xl font-black">{t('Nuevo Pago')}</p>
                 <form onSubmit={handleSubmit} method='post' name='contact-form'>
                     <div className='flex flex-col justify-content items-center gap-4'>
                         <input type="text" name="expenseName" id="expenseName" placeholder="Nombre del pago" className="w-[20rem] bg-[#fffefe] text-[#80958B] text-sm transition duration-700 border-b-2 outline-0"></input>
@@ -64,7 +65,7 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
                         </select>
                         <label htmlFor="memberWhoPaid" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">¿Quién Pagó?</label>
                         <select id="memberWhoPaid" name="memberWhoPaid" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Elige a una persona</option>
+                            <option selected>{t('Elige a una persona')}</option>
                             {
 
                                 groupUsers.map((member: any) => (
@@ -107,8 +108,8 @@ export default function NewExpenseModal({ groupUsers, cancelFunction, addFunctio
                             </div>
                         )}
                         <div className='flex no-wrap justify-center items-center gap-4'>
-                            <button className="w-[8rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] text-sm transition duration-500 font-bold ">Enviar</button>
-                            <button className="w-[6rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-sm text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] transition duration-500 font-bold" onClick={cancelFunction}>Cancelar</button>
+                            <button className="w-[8rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] text-sm transition duration-500 font-bold ">{t('Enviar')}</button>
+                            <button className="w-[6rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-sm text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] transition duration-500 font-bold" onClick={cancelFunction}>{t('Cancelar')}</button>
                         </div>
                     </div>
 

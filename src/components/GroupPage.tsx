@@ -16,6 +16,7 @@ import { getAuth } from 'firebase/auth';
 import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
+import { useTranslation } from 'react-i18next';
 
 export type Expense = {
   id: number;
@@ -50,6 +51,7 @@ type Group = {
 
 
 const GroupPage = () => {
+  const { t } = useTranslation();
   const auth = getAuth(appFirebase);
   const user = auth.currentUser;
   const { groupid } = useParams();
@@ -364,7 +366,7 @@ const GroupPage = () => {
                   border: '1px solid #bdbdbd',
                 }}
               >
-                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
+                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>{t('Nuevo miembro')}</Typography>
                 <Select
                   // Poner un placeholder que se agregar nuevo usuario
                   placeholder="Seleccione nuevo usuario"
@@ -394,10 +396,10 @@ const GroupPage = () => {
                 </List>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
                   <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
-                    Cancelar
+                    {t('Cancelar')}
                   </Button>
                   <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
-                    Agregar
+                    {t('Agregar')}
                   </Button>
                 </Box>
               </Box>
@@ -411,8 +413,8 @@ const GroupPage = () => {
         </div>
         <div className='col-span-11 py-0 ml-[100px] flex flex-col justify-center items-center'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
-            <p className='text-xl'>Gastos</p>
-            <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
+            <p className='text-xl'>{t('Gastos')}</p>
+            <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>{t('Añadir Gasto')}</button>
           </div>
           <ExpenseTable expenses={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
         </div>
