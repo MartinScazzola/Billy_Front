@@ -45,7 +45,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                             <td>{expense.name}</td>
                             <td>{expense.memberWhoPaidName}</td>
                             <td>${expense.amount} {expense.currency}</td>
-                            <td>{capitalizeFirstLetter(expense.category)}</td>
+                            <td>{t(capitalizeFirstLetter(expense.category))}</td>
                             <td>{expense.date}</td>
                             <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
                             <td>
