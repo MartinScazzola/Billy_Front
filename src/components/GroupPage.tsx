@@ -95,18 +95,17 @@ const GroupPage = () => {
       if (expense.liquidated) {
         return;
       }
-      const amountPerMember = expense.amount / expense.members.length;
+
       expense.members.forEach((id, index) => {
         const memberDebt = debts.find(debt => debt.id_user === id && debt.currency === expense.currency);
         if (id == expense.memberWhoPaid) {
           if (memberDebt != undefined) {
             console.log(expense)
-            //memberDebt.amount -= amountPerMember * (expense.members.length - 1);
+
             memberDebt.amount -= (expense.amount - expense.expense_distribution[index]);
           }
         } else {
           if (memberDebt != undefined) {
-            //memberDebt.amount += amountPerMember;
             memberDebt.amount += expense.expense_distribution[index];
           }
         }
