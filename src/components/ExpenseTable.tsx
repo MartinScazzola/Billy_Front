@@ -29,8 +29,8 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                     <th>{t('Nombre')}</th>
                     <th>{t('Pagado Por')}</th>
                     <th>{t('Monto')}</th>
-                    <th>Categoria</th>
-                    <th>Fecha</th>
+                    <th>{t('Categoria')}</th>
+                    <th>{t('Fecha')}</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -63,7 +63,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                                         },
                                     }}
                                 >
-                                    {expense.liquidated ? 'Liquidado' : 'Liquidar'}
+                                    {expense.liquidated ? t('Liquidado') : t('Liquidar')}
                                 </Button>
                             </td>
                         </tr>

@@ -17,7 +17,7 @@ const resources = {
         "Nuevo grupo": "New group",
         "Descripción": "Description",
         "Fecha": "Date",
-        "Categoría": "Category",
+        "Categoria": "Category",
         "Agregar Persona": "Add person",
         "Deuda": "Debt",
         "Seleccione nuevo usuario": "Select new user",
@@ -45,7 +45,7 @@ const resources = {
         "Viaje": "Travel",  
         "Comida": "Food",
         "Entretenimiento": "Entertainment",
-        "Educación": "Education",
+        "Educacion": "Education",
       
       // Add more translations as needed
     },
@@ -64,7 +64,7 @@ const resources = {
       "Nuevo grupo": "Nuevo grupo",
       "Descripción": "Descripción",
       "Fecha": "Fecha",
-      "Categoría": "Categoría",
+      "Categoria": "Categoría",
       "Agregar Persona": "Agregar persona",
       "Deuda": "Deuda",
       "Seleccione nuevo usuario": "Seleccione nuevo usuario",
@@ -92,7 +92,7 @@ const resources = {
       "Viaje": "Viaje",
       "Comida": "Comida",
       "Entretenimiento": "Entretenimiento",
-      "Educación": "Educación",
+      "Educacion": "Educación",
       // Add more translations as needed
 
     },
