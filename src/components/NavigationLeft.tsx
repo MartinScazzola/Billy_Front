@@ -34,7 +34,7 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                                         <div className='flex flex-col items-start'>
                                             <div className=''><span className="">{member.name}</span></div>
                                             <div className='flex flex-col items-start'>
-                                                <span>Deuda:</span>
+                                                <span>{t('Deuda')}:</span>
                                                 {debts.map((debt: any) => debt.currency).filter((item: any,
                                                     index: any, arr: any) => arr.indexOf(item) === index).map((currency: any) => {
                                                         return <div>{currency}: ${debts.filter((debt: any) => debt.currency === currency && debt.id_user === member.id_user).map((debt: any) => debt.amount)}</div>;
