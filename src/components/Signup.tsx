@@ -55,7 +55,21 @@ export default function SignUp() {
           name: name,
           email: email,
         }),
-      });
+      }).then((response) => response.json())
+          .then((user) =>
+            fetch(`${dbUrl}/groups`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id_group: null,
+                name: "Gastos Personales",
+                participants: [user.id_user],
+              }),
+        })
+      );
+      
       navigate("/billy/login");
     } catch (error) {
       console.error("Error al registrar el usuario:", error);

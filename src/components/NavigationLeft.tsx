@@ -2,15 +2,16 @@ import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from "react-i18next";
 
-export default function NavigationLeft({ groupUsers, user, debts, modal, handleDeleteGroupUser }: any) {
+export default function NavigationLeft({ groupUsers, user, debts, modal, handleDeleteGroupUser, groupName }: any) {
 
     const { t } = useTranslation();
 
     const handlerModal = () => {
         modal(true)
     }
-
+    
     return (
+
         <aside id="default-sidebar" className="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidenav">
             <div className="overflow-y-auto py-5 px-3 h-full bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                 <ul className="space-y-2">
@@ -42,16 +43,17 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button onClick={() => handleDeleteGroupUser(member.id_user)} className="text-gray-500 hover:text-gray-700 transition duration-200">
-                                        <DeleteIcon />
-                                    </button>
+                                    {groupName != "Gastos Personales" && (
+                                        <button onClick={() => handleDeleteGroupUser(member.id_user)} className="text-gray-500 hover:text-gray-700 transition duration-200">
+                                            <DeleteIcon />
+                                        </button>
+                                    )}
                                 </div>
 
                             </div>
                         ))
                     }
-                    <button className='bg-green-400 p-2 rounded-xl text-white hover:bg-green-600 transition duration-300' onClick={handlerModal}>{t('Agregar Persona')}</button>
+                    {groupName != "Gastos Personales" && (<button className='bg-green-400 p-2 rounded-xl text-white hover:bg-green-600 transition duration-300' onClick={handlerModal}>{t('Agregar Persona')}</button>)}
                 </ul>
 
             </div>

@@ -19,7 +19,6 @@ export default function detailExpenseModal({ cancelFunction, expense }: any) {
             .catch(error => console.error('Error fetching user list:', error));
 
     }, []);
-    console.log(expense);
 
     return (
 

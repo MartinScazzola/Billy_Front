@@ -383,30 +383,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-  /*
-  const handleDeleteGroup = (group_id: number) => {
-    console.log("group_id", group_id)
-    fetch(`${dbUrl}/groups/${group_id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then((response) => {
-      if (response.status === 204) {
-        console.log(`Group ${group_id} deleted`);
-        setGroups(groups.filter((group) => group.id_group !== group_id));
-      } else {
-        console.error('Failed to remove user:', response.status);
-      }
-    });
-  };*/
-
-
-{/* <ListItemButton>
-                  <ListItemDecorator>
-                    <DeleteIcon/>
-                  </ListItemDecorator>
-                  </ListItemButton> */}
-{/* <td style={{ padding: "8px" }}>{group.id_group}</td> */ }
