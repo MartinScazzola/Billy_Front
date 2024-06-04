@@ -23,6 +23,12 @@ Billy es una aplicación de gestión de pagos diseñada para ayudar a los usuari
 
 ## Dependencias
 
+Se debe instalar las siguentes dependencias:
+
+```shell
+npm install i18next react-i18next i18next-browser-languagedetector
+```
+
 Para correr el sitio web ejecutar en la terminal:
 ```shell
 npm install

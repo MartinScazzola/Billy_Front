@@ -11,6 +11,7 @@ import ArticleRoundedIcon from '@mui/icons-material/ArticleRounded';
 import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
 
 type User = {
   id_user: number;
@@ -19,6 +20,7 @@ type User = {
 };
 
 export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGroupMember, debts}: any) {
+  const { t } = useTranslation();
   return (
     <List
       size="sm"
@@ -67,7 +69,7 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
         <ListItem nested sx={{ display: 'flex' }}>
           <ListItem >
             <ListSubheader sx={{ letterSpacing: '2px', fontWeight: '800' }}>
-              Miembros del grupo
+              {t('Miembros del grupo')}
             </ListSubheader>
             <ListItemButton onClick={handleOpenModal}>
               <ListItemDecorator>
@@ -90,7 +92,7 @@ export default function Navigation({ groupUsers, handleOpenModal, handleDeleteGr
                 </ListItemButton>
               </ListItem>
               <ListItem>
-                <ListItemContent> Deuda: ${debts.find((debt: any) => debt.id_user === user.id_user)?.amount || 0
+                <ListItemContent> {t('Deuda')}: ${debts.find((debt: any) => debt.id_user === user.id_user)?.amount || 0
                 }</ListItemContent>
               </ListItem>
             </List>

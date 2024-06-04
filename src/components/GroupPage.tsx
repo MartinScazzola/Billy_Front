@@ -16,7 +16,7 @@ import { getAuth } from 'firebase/auth';
 import appFirebase from '../credentials';
 import NavigationLeft from './NavigationLeft';
 import NewExpenseModal from './NewExpenseModal';
-
+import { useTranslation } from 'react-i18next';
 
 export type Expense = {
   id: number;
@@ -27,11 +27,15 @@ export type Expense = {
   memberWhoPaidName: string;
   members: number[];
   liquidated: boolean;
+  expense_distribution: number[];
+  date: string;
+  category: string;
 };
 
 type Debts = {
   id_user: number;
   amount: number;
+  currency: string;
 }
 
 type User = {
@@ -47,6 +51,7 @@ type Group = {
 
 
 const GroupPage = () => {
+  const { t } = useTranslation();
   const auth = getAuth(appFirebase);
   const user = auth.currentUser;
   const { groupid } = useParams();
@@ -81,21 +86,27 @@ const GroupPage = () => {
   };
 
   const updateDebts = (expenses: Expense[]) => {
-    const debts = groupUsers.map(user => ({ id_user: user.id_user, amount: 0 }));
+    const debts = groupUsers.map(user => {
+      return expenses.map((expense) => expense.currency).filter((item: any,
+        index: any, arr: any) => arr.indexOf(item) === index).map((currency) => ({ id_user: user.id_user, amount: 0, currency: currency }))
+    }
+    ).flat();
     expenses.forEach(expense => {
       if (expense.liquidated) {
         return;
       }
-      const amountPerMember = expense.amount / expense.members.length;
-      expense.members.forEach(id => {
-        const memberDebt = debts.find(debt => debt.id_user === id);
+
+      expense.members.forEach((id, index) => {
+        const memberDebt = debts.find(debt => debt.id_user === id && debt.currency === expense.currency);
         if (id == expense.memberWhoPaid) {
           if (memberDebt != undefined) {
-            memberDebt.amount -= amountPerMember * (expense.members.length - 1);
+            console.log(expense)
+
+            memberDebt.amount -= (expense.amount - expense.expense_distribution[index]);
           }
         } else {
           if (memberDebt != undefined) {
-            memberDebt.amount += amountPerMember;
+            memberDebt.amount += expense.expense_distribution[index];
           }
         }
       });
@@ -105,6 +116,8 @@ const GroupPage = () => {
 
   const handleAddExpense = (newExpense: Expense) => {
 
+    console.log(newExpense)
+
     const expense_post = {
       id_expense: null,
       id_group: groupid,
@@ -113,7 +126,10 @@ const GroupPage = () => {
       amount: newExpense.amount,
       currency: newExpense.currency,
       participants: newExpense.members,
-      liquidated: false
+      liquidated: false,
+      expense_distribution: newExpense.expense_distribution,
+      date: newExpense.date,
+      category: newExpense.category,
     }
 
     const data = new URL(`${dbUrl}/expenses`);
@@ -170,7 +186,10 @@ const GroupPage = () => {
       amount: expense.amount,
       currency: expense.currency,
       participants: expense.members,
-      liquidated: true
+      liquidated: true,
+      expense_distribution: expense.expense_distribution,
+      category: expense.category,
+      date: expense.date
     }
     fetch(api, {
       method: 'PUT',
@@ -219,7 +238,7 @@ const GroupPage = () => {
 
         if (newUserObject) {
           setGroupUsers([...groupUsers, { ...newUserObject }]);
-          setDebts([...debts, { id_user: newUserObject.id_user, amount: 0 }])
+          setDebts([...debts, { id_user: newUserObject.id_user, amount: 0, currency: 'ARS' }])
         }
 
         setMemberName('');
@@ -280,6 +299,7 @@ const GroupPage = () => {
     fetch(`${dbUrl}/expenses`)
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         const filtered = data.filter((expense: any) => expense.id_group == groupid);
         const maped = filtered.map((expense: any) => {
           return {
@@ -290,7 +310,10 @@ const GroupPage = () => {
             memberWhoPaid: expense.id_user,
             memberWhoPaidName: groupUsers.find((member: any) => member.id_user === expense.id_user)?.name ?? '',
             members: expense.participants,
-            liquidated: expense.liquidated
+            liquidated: expense.liquidated,
+            expense_distribution: expense.expense_distribution,
+            category: expense.category,
+            date: expense.date
           }
         })
         setExpenses(maped);
@@ -342,7 +365,7 @@ const GroupPage = () => {
                   border: '1px solid #bdbdbd',
                 }}
               >
-                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>Nuevo miembro</Typography>
+                <Typography level="h3" sx={{ mb: 1, color: 'white' }}>{t('Nuevo miembro')}</Typography>
                 <Select
                   // Poner un placeholder que se agregar nuevo usuario
                   placeholder="Seleccione nuevo usuario"
@@ -372,10 +395,10 @@ const GroupPage = () => {
                 </List>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', gap: 1 }}>
                   <Button onClick={handleCloseModal} sx={{ color: 'white' }}>
-                    Cancelar
+                    {t('Cancelar')}
                   </Button>
                   <Button onClick={handleAddGroupMember} sx={{ color: 'white' }}>
-                    Agregar
+                    {t('Agregar')}
                   </Button>
                 </Box>
               </Box>
@@ -389,15 +412,16 @@ const GroupPage = () => {
         </div>
         <div className='col-span-11 py-0 ml-[100px] flex flex-col justify-center items-center'>
           <div className='w-full h-16 bg-white p-0 flex items-center px-10 font-semibold rounded-xl justify-between'>
-            <p className='text-xl'>Gastos</p>
-            <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>Añadir Gasto</button>
+            <p className='text-xl'>{t('Gastos')}</p>
+            <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>{t('Añadir Gasto')}</button>
           </div>
-          <ExpenseTable items={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
+          <ExpenseTable expenses={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
         </div>
       </div>
       {expenseModal === true && (
         <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses={expenses} setExpenses={setExpenses} addFunction={handleAddExpense} />
       )}
+
 
     </aside>
   );
