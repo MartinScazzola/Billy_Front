@@ -344,31 +344,31 @@ const Home = () => {
                 color: "black"
               }}
             >
-              <Typography level="h3" sx={{ mb: 1 }}>
+              <Typography level="h4" sx={{ mb: 2, fontWeight: 'bold', color: '#333'}}>
                 {t('Ayuda')}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 2, color: '#333' }}>
                 {t('Bienvenido a la aplicación de control de gastos Billy. Aquí te mostramos cómo usar la página web:')}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 1. {t("Regístrate con tu nombre, apellido, correo electrónico y contraseña en la página de sign up")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 2. {t("Inicia sesión con tu correo electrónico y contraseña en la página de log in")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 3. {t("En la página de inicio, verás tus grupos y podrás crear un nuevo grupo haciendo click en el botón 'crear nuevo grupo'")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 4. {t("Dentro de un grupo, puedes añadir miembros haciendo click en el botón 'agregar persona' o eliminar un miembro haciendo click en el ícono del cesto. Además, puedes agregar gastos haciendo click en el botón 'agregar gasto'")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 5. {t("Al añadir un gasto, podrás agregar su nombre, el precio (seleccionando la divisa correspondiente), miembro que lo pagó, categoría y cómo quiere ser divido entre los miembros del grupo")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 6. {t("La división de gastos puede ser en partes iguales o por porcentajes. Una vez añadido el gasto, las deudas se actualizarán entre los miembros del grupo automáticamente")}
               </Typography>
-              <Typography sx={{ mb: 1 }}>
+              <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 7. {t("Puedes liquidar los gastos haciendo click en el botón 'liquidar gasto', y las deudas se actualizarán en consecuencia. Si has agregado un gasto erroneamente, puedes eliminarlo haciendo click en el botón 'eliminar gasto'")}
               </Typography>
               <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
