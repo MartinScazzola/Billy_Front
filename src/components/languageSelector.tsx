@@ -9,9 +9,31 @@ const LanguageSelector = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", mr: 2 }}>
-      <Button onClick={() => handleChangeLanguage('en')} >EN</Button>
-      <Button onClick={() => handleChangeLanguage('es')} >ES</Button>
+    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+      <Button
+        onClick={() => handleChangeLanguage('en')}
+        sx={{
+          backgroundColor: 'lightgrey',
+          color: 'black',
+          '&:hover': {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+        }}
+      >
+        EN
+      </Button>
+      <Button
+        onClick={() => handleChangeLanguage('es')}
+        sx={{
+          backgroundColor: 'lightgrey',
+          color: 'black',
+          '&:hover': {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+        }}
+      >
+        ES
+      </Button>
     </Box>
   );
 };
