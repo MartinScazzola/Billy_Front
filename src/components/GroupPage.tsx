@@ -63,6 +63,7 @@ const GroupPage = () => {
   const [_memberWhoPaid, setMemberWhoPaid] = useState(0);
   const [expenseModal, setExpenseModal] = useState(false);
 
+
   const [newUser, setNewUser] = useState(0);
 
   const [groupUsers, setGroupUsers] = useState<User[]>([]);
@@ -84,6 +85,7 @@ const GroupPage = () => {
   const closeExpenseModal = () => {
     setExpenseModal(false);
   };
+
 
   const updateDebts = (expenses: Expense[]) => {
     const debts = groupUsers.map(user => {
@@ -415,13 +417,12 @@ const GroupPage = () => {
             <p className='text-xl'>{t('Gastos')}</p>
             <button className='bg-blue-400 p-2 rounded-xl text-white hover:bg-blue-600 transition duration-300' onClick={() => setExpenseModal(true)}>{t('Añadir Gasto')}</button>
           </div>
-          <ExpenseTable expenses={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense} />
+          <ExpenseTable expenses={expenses} deleteFunction={handleDeleteExpense} liquidatedFunction={handleLiquidateExpense}/>
         </div>
       </div>
       {expenseModal === true && (
         <NewExpenseModal cancelFunction={closeExpenseModal} groupUsers={groupUsers} expenses={expenses} setExpenses={setExpenses} addFunction={handleAddExpense} />
       )}
-
 
     </aside>
   );

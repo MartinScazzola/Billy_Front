@@ -1,14 +1,23 @@
 import Button from '@mui/material/Button';
 import DoneIcon from '@mui/icons-material/Done';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
+import DetailExpenseModal from './detailExpenseModal';
 
 // ExpenseTable component
-export default function ClientsTable({expenses, deleteFunction, liquidatedFunction }: any) {
+export default function ClientsTable({ expenses, deleteFunction, liquidatedFunction }: any) {
 
     const { t } = useTranslation();
     const [filters, setFilters] = useState({ name: '', amount: '', member: '', date: '', category: '' });
-    
+    const [detailExpense, setDetailExpense] = useState(null);
+
+    const closeDetailExpense = () => {
+        setDetailExpense(null);
+    };
+    const openDetailExpense = (expense: SetStateAction<null>) => {
+        setDetailExpense(expense);
+    };
+
     function capitalizeFirstLetter(string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -40,7 +49,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                     placeholder={t('Nombre')}
                     value={filters.name}
                     onChange={handleFilterChange}
-                    style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', flex: '1 1 200px'}}
+                    style={{ padding: '8px', border: '1px solid #ccc', borderRadius: '4px', flex: '1 1 200px' }}
                 />
                 <input
                     type="text"
@@ -87,6 +96,7 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                         <th>{t('Fecha')}</th>
                         <th></th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,14 +104,14 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                         filteredExpenses.map((expense: any, index: number) => (
                             <tr key={index}>
                                 <td>
-                                <img className='max-h-8' src={"/" + expense.category + ".png"} alt="Icono Avión" />
+                                    <img className='max-h-8' src={"/" + expense.category + ".png"} alt="Icono Avión" />
                                 </td>
                                 <td>{expense.name}</td>
                                 <td>{expense.memberWhoPaidName}</td>
                                 <td>${expense.amount} {expense.currency}</td>
                                 <td>{t(capitalizeFirstLetter(expense.category))}</td>
                                 <td>{expense.date}</td>
-                                <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300'onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
+                                <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300' onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
                                 <td>
                                     <Button
                                         variant="contained"
@@ -120,11 +130,17 @@ export default function ClientsTable({expenses, deleteFunction, liquidatedFuncti
                                         {expense.liquidated ? t('Liquidado') : t('Liquidar')}
                                     </Button>
                                 </td>
+                                <td><button onClick={() => setDetailExpense(expense)}><svg className="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />  <circle cx="12" cy="12" r="3" /></svg></button></td>
+
                             </tr>
                         ))
                     }
                 </tbody>
             </table>
+            {detailExpense && (
+                <DetailExpenseModal cancelFunction={closeDetailExpense} expense={detailExpense}></DetailExpenseModal>
+            )}
+
         </div>
     )
 }
