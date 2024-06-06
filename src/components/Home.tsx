@@ -7,6 +7,7 @@ import {
   Box,
   Menu,
   MenuItem,
+  Modal,
 } from "@mui/joy";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -21,6 +22,7 @@ import appFirebase from "../../src/credentials";
 import { dbUrl } from "../DBUrl";
 import { useTranslation } from "react-i18next";
 import LanguageSelector from "./languageSelector";
+import GeneralBalanceDebtsModal from "./GeneralBalanceDebtsModal";
 
 
 // Definir el tipo para los grupos
@@ -41,6 +43,8 @@ const Home = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Estado para el menú desplegable del usuario
   const [notifAnchorEl, setNotifAnchorEl] = useState<null | HTMLElement>(null); // Estado para el menú desplegable de notificaciones
+  const [isGeneralBalanceDebtModalOpen, setisGeneralBalanceDebtModalOpen] = useState(false);
+  const [id_user, setId_user] = useState(0);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
@@ -48,8 +52,12 @@ const Home = () => {
     setGroupName(""); // Limpiar el campo después de cerrar el modal
   };
 
+
+
   const handleHelpOpenModal = () => setIsHelpModalOpen(true);
   const handleHelpCloseModal = () => setIsHelpModalOpen(false);
+  const handleOpenGeneralBalance = () => setisGeneralBalanceDebtModalOpen(true);
+  const handleCloseGeneralBalance = () => setisGeneralBalanceDebtModalOpen(false);
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGroupName(e.target.value);
@@ -69,6 +77,7 @@ const Home = () => {
     )
       .then((response) => response.json())
       .then((data) => {
+        setId_user(data.id_user);
         fetch(`${dbUrl}/users/${data.id_user}/groups`, {
           method: "GET",
           headers: {
@@ -321,7 +330,16 @@ const Home = () => {
             </Box>
           </Box>
         )}
-
+        <Button onClick={handleOpenGeneralBalance}>Open Modal</Button>
+            <Modal
+            open={isGeneralBalanceDebtModalOpen}
+            onClose={handleCloseGeneralBalance}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+            >
+           <GeneralBalanceDebtsModal cancelFunction={handleCloseGeneralBalance} id_user={id_user} />  
+            </Modal>
+          
         {isHelpModalOpen && (
           <Box
             sx={{

@@ -132,7 +132,7 @@ const GroupPage = () => {
     }
 
     const data = new URL(`${dbUrl}/expenses`);
-
+    console.log(expense_post);
     fetch(data, {
       method: 'POST',
       headers: {
