@@ -86,11 +86,10 @@ const GroupPage = () => {
 
   const handleDownloadReport = () => {
     const doc = new jsPDF();
-    doc.text('Informe de Gastos del Grupo', 20, 10);
+    doc.text('Informe de Gastos del Grupo: ' + group.name , 20, 10);
 
-    const tableColumn = ["ID", "Nombre", "Monto", "Moneda", "Pagador", "Fecha", "Categoría", "Liquidado"];
+    const tableColumn = ["Nombre", "Monto", "Moneda", "Pagador", "Fecha", "Categoría", "Liquidado"];
     const tableRows = expenses.map(expense => [
-      expense.id,
       expense.name,
       expense.amount,
       expense.currency,
@@ -109,7 +108,7 @@ const GroupPage = () => {
   };
 
   const csvData = expenses.map(expense => ({
-    ID: expense.id,
+    Grupo: group.name,
     Nombre: expense.name,
     Monto: expense.amount,
     Moneda: expense.currency,
