@@ -330,7 +330,7 @@ const Home = () => {
             </Box>
           </Box>
         )}
-        <Button onClick={handleOpenGeneralBalance}>Open Modal</Button>
+        <Button onClick={handleOpenGeneralBalance}>Ver Balance de Deuda</Button>
             <Modal
             open={isGeneralBalanceDebtModalOpen}
             onClose={handleCloseGeneralBalance}
