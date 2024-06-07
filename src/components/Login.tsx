@@ -18,7 +18,9 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 // Importar Firebase
 import appFirebase from '../../src/credentials';
-import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { signInWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { useState } from 'react';
+import { dbUrl } from '../DBUrl';
 
 // Obtener la instancia de autenticación de Firebase
 const auth = getAuth(appFirebase);
@@ -51,6 +53,50 @@ export default function Login() {
       );
     }
   };
+
+  const hanldeLoginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      fetch(`${dbUrl}/users`)
+      .then(response => response.json())
+      .then(data => {
+          const userExists = data.some((user: any) => user.email === auth.currentUser?.email);
+
+          if (!userExists) {
+            fetch(`${dbUrl}/users`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id_user: null,
+                name:  auth.currentUser?.displayName,
+                email: auth.currentUser?.email,
+              }),
+            }).then((response) => response.json())
+                .then((user) =>
+                  fetch(`${dbUrl}/groups`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      id_group: null,
+                      name: "Gastos Personales",
+                      participants: [user.id_user],
+                    }),
+              })
+            );
+          }
+          navigate('/billy/home'); 
+      })
+      .catch(error => console.error('Error fetching user list:', error));
+    } catch (error) {
+      console.error('Error al iniciar sesión con Google:', error);
+      alert('Error al iniciar sesión con Google. Por favor, inténtalo de nuevo.');
+    }
+  }
 
   React.useEffect(() => {
     const user = auth.currentUser;
@@ -176,6 +222,7 @@ export default function Login() {
                   </Typography>
                 </Stack>
                 <Button
+                  onClick={hanldeLoginWithGoogle}
                   variant="soft"
                   color="neutral"
                   fullWidth
