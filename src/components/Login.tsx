@@ -71,7 +71,7 @@ export default function Login() {
               },
               body: JSON.stringify({
                 id_user: null,
-                name:  auth.currentUser?.displayName,
+                name:  auth.currentUser?.displayName?.split(" ")[0],
                 email: auth.currentUser?.email,
               }),
             }).then((response) => response.json())
