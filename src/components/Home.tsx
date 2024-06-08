@@ -295,6 +295,7 @@ const Home = () => {
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "rgba(0, 0, 0, 0.5)",
+              zIndex: 1300,
             }}
           >
             <Box
