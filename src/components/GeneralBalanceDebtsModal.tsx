@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { dbUrl } from "../DBUrl";
+import { useTranslation } from "react-i18next";
 
 type GroupDebt = {
     id_group: number;
@@ -11,7 +12,7 @@ type GroupDebt = {
 
 
 export default function detailExpenseModal({ cancelFunction, id_user }: any) {
-
+    const { t } = useTranslation();
     const [groupDebts, setGroupDebts] = useState<GroupDebt[]>([]);
     const [groups, setGroups] = useState<any[]>([]);
     useEffect(() => {
@@ -77,20 +78,20 @@ export default function detailExpenseModal({ cancelFunction, id_user }: any) {
 
         <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-30'>
             <div className="animationTest rounded-3xl bg-white w-[500px] h-[500px] flex flex-col justify-center items-center text-black shadow-2xl gap-5 ">
-                <p className="font-overlock text-[#CFBC9C] text-2xl font-black">Balance de Deudas</p>
+                <p className="font-overlock text-[#CFBC9C] text-2xl font-black">{t('Balance de Deudas')}</p>
                 <div className="flex flex-col w-full justfiy-center items-center gap-5">
                     {groupDebts.map((totalExpense: any, index: number) => (
                         <>
                             <div className="flex w-[100%] justify-between px-20 items-center">
-                                <div><b>Grupo:</b> {groups.find(group=>group.id_group == totalExpense.id_group ).name} </div> 
-                                <div><b>Deuda:</b> {totalExpense.amount_user}{totalExpense.currency} </div>
+                                <div><b>{t('Grupo')}:</b> {groups.find(group=>group.id_group == totalExpense.id_group ).name} </div> 
+                                <div><b>{t('Deuda')}:</b> {totalExpense.amount_user}{totalExpense.currency} </div>
                             </div>
                             <div className="w-[70%] border-2 border-[#CFBC9C]"></div>
                         </>
                     ))
                     }
                 </div>
-                <button className="w-[6rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-sm text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] transition duration-500 font-bold py-1" onClick={cancelFunction}>cerrar</button>
+                <button className="w-[6rem] bg-[#fffefe] border-2 border-[#e1dfd8] text-sm text-[#CFBC9C] rounded-xl hover:bg-[#CFBC9C] hover:text-[#fffefe] transition duration-500 font-bold py-1" onClick={cancelFunction}>{t('cerrar')}</button>
             </div>
         </div>
     )

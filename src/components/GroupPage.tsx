@@ -526,7 +526,7 @@ const GroupPage = () => {
                 <Typography level="h3" sx={{ mb: 1, color: 'white' }}>{t('Nuevo miembro')}</Typography>
                 <Select
                   // Poner un placeholder que se agregar nuevo usuario
-                  placeholder="Seleccione nuevo usuario"
+                  placeholder={t("Seleccione nuevo usuario")}
                   variant="plain"
                   value={newUser}
                   onChange={(_, value) => setNewUser(value!)}

@@ -312,7 +312,7 @@ const Home = () => {
               </Typography>
               <input
                 type="text"
-                placeholder="Nombre del grupo"
+                placeholder={t("Nombre del grupo")}
                 value={groupName}
                 onChange={handleGroupNameChange}
                 style={{
@@ -330,7 +330,7 @@ const Home = () => {
             </Box>
           </Box>
         )}
-        <Button onClick={handleOpenGeneralBalance}>Ver Balance de Deuda</Button>
+        <Button onClick={handleOpenGeneralBalance}>{t('Ver Balance de Deuda')}</Button>
             <Modal
             open={isGeneralBalanceDebtModalOpen}
             onClose={handleCloseGeneralBalance}
