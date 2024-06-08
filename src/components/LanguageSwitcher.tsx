@@ -21,7 +21,7 @@ const LanguageSwitcher = () => {
 
   return (
     <div>
-      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+      <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick} >
         {i18n.language === 'en' ? 'English' : 'Español'}
       </Button>
       <Menu

@@ -199,6 +199,7 @@ const Home = () => {
             justifyContent: "space-between",
             alignItems: "center",
             mb: 2,
+            p:3,
           }}
         >
           <Button
@@ -209,30 +210,32 @@ const Home = () => {
           >
             {t('Crear nuevo grupo')}
           </Button>
-          <Button
-            onClick={handleHelpOpenModal}
-            startDecorator={<HelpIcon/>}
-            sx={{ mb: 2, color: "black"}}
-            variant="outlined"
-          >
-            {t('Ayuda')}
-          </Button>
-          <Box sx={{ display: "flex", alignItems: "center"}}>
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', ml: 'auto'}}>
+            <Button
+              onClick={handleHelpOpenModal}
+              startDecorator={<HelpIcon />}
+              sx={{ mb: 2, color: 'black', ml:29}}
+              variant="outlined"
+            >
+              {t('Ayuda')}
+            </Button>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", mt: '-19px'}}>
             <LanguageSelector />
             <Button
               onClick={handleNotifMenuOpen}
-              sx={{ border: "1px solid grey", mr: 1, color: "#555555"}}
+              sx={{ mr: 1, color: "black"}}
               variant="outlined"
             >
               <NotificationsIcon />
             </Button>
             <Button
               onClick={handleMenuOpen}
-              sx={{ border: "1px solid grey", color: "#555555" }}
+              sx={{ color: "black" }}
               variant="outlined"
             >
               <PersonIcon />
-              <Typography sx={{ ml: 1, color: "#555555" }}>
+              <Typography sx={{ ml: 1, color: "black" }}>
                 {auth?.currentUser?.email ?? "Usuario"}
               </Typography>
             </Button>
@@ -262,6 +265,7 @@ const Home = () => {
             boxShadow: 3,
             p: 2,
             bgcolor: "background.paper",
+            mt: '-30px'
           }}
         >
           <table className="table" style={{ width: "100%", borderCollapse: "collapse" }}>
