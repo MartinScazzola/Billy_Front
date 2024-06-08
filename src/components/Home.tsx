@@ -372,13 +372,13 @@ const Home = () => {
                 1. {t("Regístrate con tu nombre, apellido, correo electrónico y contraseña en la página de sign up")}
               </Typography>
               <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
-                2. {t("Inicia sesión con tu correo electrónico y contraseña en la página de log in")}
+                2. {t("Inicia sesión con tu correo electrónico y contraseña en la página de log in. También puedes iniciar sesión con Google")}
               </Typography>
               <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
-                3. {t("En la página de inicio, verás tus grupos y podrás crear un nuevo grupo haciendo click en el botón 'crear nuevo grupo'")}
+                3. {t("En la página de inicio, verás tus grupos y podrás crear un nuevo grupo haciendo click en el botón 'crear nuevo grupo'. Siempre tendrás un grupo predeterminado de'gastos personales', donde puedes llevar cuenta de tus finanzas personales. Además, puedes ver el balance general de deudas de todos tus grupos")}
               </Typography>
               <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
-                4. {t("Dentro de un grupo, puedes añadir miembros haciendo click en el botón 'agregar persona' o eliminar un miembro haciendo click en el ícono del cesto. Además, puedes agregar gastos haciendo click en el botón 'agregar gasto'")}
+                4. {t("Dentro de un grupo, puedes añadir miembros haciendo click en el botón 'agregar persona' o eliminar un miembro haciendo click en el ícono del cesto. Además, puedes descargar el informe de los gastos en formato PDF/CSV y puedes agregar gastos haciendo click en el botón 'agregar gasto'. También puedes filtrar un gasto en específico según nombre, categoría, monto o fecha")}
               </Typography>
               <Typography sx={{ mb: 1, color: '#333', lineHeight: 1.5 }}>
                 5. {t("Al añadir un gasto, podrás agregar su nombre, el precio (seleccionando la divisa correspondiente), miembro que lo pagó, categoría y cómo quiere ser divido entre los miembros del grupo")}
