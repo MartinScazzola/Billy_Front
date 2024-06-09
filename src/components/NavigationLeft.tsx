@@ -35,11 +35,22 @@ export default function NavigationLeft({ groupUsers, user, debts, modal, handleD
                                         <div className='flex flex-col items-start'>
                                             <div className=''><span className="">{member.name}</span></div>
                                             <div className='flex flex-col items-start'>
-                                                <span>{t('Deuda')}:</span>
-                                                {debts.map((debt: any) => debt.currency).filter((item: any,
-                                                    index: any, arr: any) => arr.indexOf(item) === index).map((currency: any) => {
-                                                        return <div>{currency}: ${debts.filter((debt: any) => debt.currency === currency && debt.id_user === member.id_user).map((debt: any) => debt.amount)}</div>;
-                                                    })}
+                                                {groupName !== "Gastos Personales" && (
+                                                    <>
+                                                        <span>{t('Deuda')}:</span>
+                                                        {debts.map((debt: any) => debt.currency)
+                                                            .filter((item: any, index: any, arr: any) => arr.indexOf(item) === index)
+                                                            .map((currency: any) => {
+                                                                return (
+                                                                    <div key={currency}>
+                                                                        {currency}: ${debts
+                                                                            .filter((debt: any) => debt.currency === currency && debt.id_user === member.id_user)
+                                                                            .map((debt: any) => debt.amount)}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

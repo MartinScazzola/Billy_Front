@@ -27,7 +27,7 @@ export default function detailExpenseModal({ cancelFunction, id_user }: any) {
                 const groupDebts = filtered.map((expense: any) => {
                     let amount_user;
 
-                    if (expense.id_user === id_user) {
+                    if (expense.id_user === id_user ) {
                         amount_user = expense.expense_distribution[expense.participants.indexOf(id_user)] - expense.amount;
                     } else {
                         amount_user = expense.expense_distribution[expense.participants.indexOf(id_user)];
@@ -80,7 +80,7 @@ export default function detailExpenseModal({ cancelFunction, id_user }: any) {
             <div className="animationTest rounded-3xl bg-white w-[500px] h-[500px] flex flex-col justify-center items-center text-black shadow-2xl gap-5 ">
                 <p className="font-overlock text-[#CFBC9C] text-2xl font-black">{t('Balance de Deudas')}</p>
                 <div className="flex flex-col w-full justfiy-center items-center gap-5">
-                    {groupDebts.map((totalExpense: any, index: number) => (
+                    {groupDebts.map((totalExpense: any, _index: number) => (
                         <>
                             <div className="flex w-[100%] justify-between px-20 items-center">
                                 <div><b>{t('Grupo')}:</b> {groups.find(group=>group.id_group == totalExpense.id_group ).name} </div> 

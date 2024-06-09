@@ -5,7 +5,7 @@ import { SetStateAction, useState } from 'react';
 import DetailExpenseModal from './detailExpenseModal';
 
 // ExpenseTable component
-export default function ClientsTable({ expenses, deleteFunction, liquidatedFunction }: any) {
+export default function ClientsTable({ expenses, deleteFunction, liquidatedFunction, groupName }: any) {
 
     const { t } = useTranslation();
     const [filters, setFilters] = useState({ name: '', amount: '', member: '', date: '', category: '' });
@@ -113,22 +113,22 @@ export default function ClientsTable({ expenses, deleteFunction, liquidatedFunct
                                 <td>{expense.date}</td>
                                 <td><button className='bg-red-400 p-2 rounded-xl text-white hover:bg-red-600 transition duration-300' onClick={() => deleteFunction(expense.id)}>{t('Eliminar Gasto')}</button></td>
                                 <td>
-                                    <Button
-                                        variant="contained"
-                                        color={expense.liquidated ? "success" : "primary"}
-                                        onClick={() => liquidatedFunction(expense)}
-                                        disabled={expense.liquidated}
-                                        startIcon={<DoneIcon />}
-                                        sx={{
-                                            transition: 'background-color 0.3s',
-                                            backgroundColor: expense.liquidated ? 'green' : 'grey',
-                                            '&:hover': {
-                                                backgroundColor: expense.liquidated ? 'darkgreen' : 'darkgrey',
-                                            },
-                                        }}
-                                    >
-                                        {expense.liquidated ? t('Liquidado') : t('Liquidar')}
-                                    </Button>
+                                <Button
+                                    variant="contained"
+                                    color={expense.liquidated || groupName === "Gastos Personales" ? "success" : "primary"}
+                                    onClick={() => liquidatedFunction(expense)}
+                                    disabled={expense.liquidated || groupName === "Gastos Personales"}
+                                    startIcon={<DoneIcon />}
+                                    sx={{
+                                        transition: 'background-color 0.3s',
+                                        backgroundColor: expense.liquidated || groupName === "Gastos Personales" ? 'grey' : 'primary.main',
+                                        '&:hover': {
+                                            backgroundColor: expense.liquidated || groupName === "Gastos Personales" ? 'darkgrey' : 'primary.dark',
+                                        },
+                                    }}
+                                >
+                                    {expense.liquidated || groupName === "Gastos Personales" ? t('Liquidado') : t('Liquidar')}
+                                </Button>
                                 </td>
                                 <td><button onClick={() => setDetailExpense(expense)}><svg className="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />  <circle cx="12" cy="12" r="3" /></svg></button></td>
 
